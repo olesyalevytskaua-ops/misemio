@@ -62,6 +62,17 @@
     return href ? `<a ${attrs({ ...a, href })}>${icon(name)}</a>` : `<button type="button" ${attrs(a)}>${icon(name)}</button>`;
   };
 
+  // Timer: a countdown for a step that names a duration. state: idle | running | paused | done
+  const clock = (sec) => { const s = Math.max(0, Math.round(sec)); const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), r = s % 60;
+    const p = (n) => String(n).padStart(2, '0'); return h ? `${h}:${p(m)}:${p(r)}` : `${p(m)}:${p(r)}`; };
+  const timer = ({ key, label: lbl, left, state = 'idle' } = {}) => {
+    const verb = { idle: 'Start', running: 'Pause', paused: 'Resume', done: 'Again' }[state];
+    return `<div class="mm-timer" data-state="${esc(state)}">${icon('timer')}
+      <span class="mm-timer__body">${label(lbl, { tag: 'span' })}<span class="mm-timer__time" role="timer" ${attrs({ 'data-timer': key })}>${state === 'done' ? 'Done' : clock(left)}</span></span>
+      ${button(verb, { variant: 'secondary', action: 'timer', data: key, ariaLabel: `${verb} ${lbl} timer` })}
+      ${state !== 'idle' ? iconButton('close', `Reset ${lbl} timer`, { action: 'timer-reset', data: key }) : ''}</div>`;
+  };
+
   /* ---- Choice ------------------------------------------------------------- */
   const chip = (text, { pressed, action, data, href, count } = {}) => {
     const body = esc(text) + (count !== undefined ? ` · ${esc(count)}` : '');
@@ -176,7 +187,7 @@
     `<div class="mm-toast" role="status">${esc(text)}${undo ? '<button type="button" data-action="undo">UNDO</button>' : ''}</div>`;
   const actionbar = (html) => `<div class="mm-actionbar">${html}</div>`;
 
-  window.MM = { esc, icon, ICONS, label, display, meta, serif, button, iconButton, chip, chips, tag, segmented, toggle, stepper, check,
+  window.MM = { esc, icon, ICONS, label, display, meta, serif, button, iconButton, chip, chips, tag, segmented, toggle, stepper, timer, clock, check,
     searchField, textField, photo, monogram, topbar, section, listRow, indexRow, list, dataRow, stats, progress, empty, tabbar, rail,
     sheet, option, toast, actionbar, TABS, VERSION: '1.0' };
 })();

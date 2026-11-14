@@ -30,7 +30,7 @@ Cormorant Garamond italic (display 44/32/24, serif 18) · DM Sans (body 15, smal
 4-pt scale --s-1…--s-14; gutter 24. Hit 44, primary control 60, tab bar 84, column max 430. Radius 0. Motion 120/240/420ms, ease cubic-bezier(.2,.7,.2,1).
 
 ## Components (MM.*)
-button (primary/accent/secondary/ghost, m/l) · iconButton · chip/chips · tag · segmented · stepper · toggle · check · searchField · textField · photo (placeholder: letter + tone 1–4, sprig + caption ≥100px) · monogram · topbar · section · listRow/list · indexRow (contents-page row: number = drag handle, serif title, count, arrow; add variant) · stats · dataRow · progress · empty · tabbar (Library, Collections, Import, Menu, Me; active = solid tile) · rail · sheet/option · toast (undo) · actionbar.
+button (primary/accent/secondary/ghost, m/l) · iconButton · chip/chips · tag · segmented · stepper · toggle · timer (cook-mode countdown; idle/running/paused/done) · check · searchField · textField · photo (placeholder: letter + tone 1–4, sprig + caption ≥100px) · monogram · topbar · section · listRow/list · indexRow (contents-page row: number = drag handle, serif title, count, arrow; add variant) · stats · dataRow · progress · empty · tabbar (Library, Collections, Import, Menu, Me; active = solid tile) · rail · sheet/option · toast (undo) · actionbar.
 
 ## Decisions
 - Collections layout: Option 2 · index, no photos (chosen 2026-11-14). Numbered MM.indexRow list, drag by the number, "+ New collection" as the last row.

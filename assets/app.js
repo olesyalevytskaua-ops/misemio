@@ -25,7 +25,7 @@
     activeMenu: store.get('activeMenu', 'week'),
     grocery: store.get('grocery', {}),
     theme: store.get('theme', 'light'),
-    pick: 0, q: '', sort: 'added', filters: {}, sheet: null, servings: {}, step: 0,
+    pick: 0, q: '', sort: 'added', filters: {}, sheet: null, servings: {}, step: 0, timers: {},
     groceryView: 'aisle', toast: null, undo: null, draft: null, addDay: 'Any day', addMenu: null
   };
   const save = () => { ['recipes', 'collections', 'menus', 'activeMenu', 'grocery', 'theme'].forEach((k) => store.set(k, S[k])); };
@@ -169,16 +169,37 @@
       ${M.actionbar(M.button('+ Menu', { variant: 'secondary', size: 'l', action: 'open-sheet', data: 'addmenu' }) + M.button('Start cooking', { size: 'l', href: '#cook-' + r.id, trailing: 'arrow', block: true }))}` };
   };
 
+  /* ---- Step timers: any duration named in a step becomes a timer ------------- */
+  const NUMW = { a: 1, an: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, fifteen: 15, twenty: 20, thirty: 30, forty: 40 };
+  const timesIn = (txt) => {
+    const re = /\b(\d+(?:\.\d+)?|a|an|one|two|three|four|five|six|seven|eight|nine|ten|fifteen|twenty|thirty|forty)\s*(?:(?:–|-|to)\s*(\d+)\s*)?(hours?|hrs?|h|minutes?|mins?|seconds?|secs?)\b/gi;
+    const out = []; let m;
+    while ((m = re.exec(txt)) && out.length < 2) {
+      const n = +(m[2] || (NUMW[m[1].toLowerCase()] ?? m[1])); const u = m[3][0].toLowerCase();
+      const sec = Math.round(n * (u === 'h' ? 3600 : u === 'm' ? 60 : 1));
+      if (sec > 0 && !out.some((t) => t.sec === sec)) out.push({ sec, label: u === 'h' ? `${n} h` : u === 'm' ? `${n} min` : `${n} sec` });
+    }
+    return out;
+  };
+  const timerLeft = (t) => (t.end ? Math.max(0, Math.ceil((t.end - Date.now()) / 1000)) : t.left);
+  const timerState = (t) => (!t ? 'idle' : t.done ? 'done' : t.end ? 'running' : t.left < t.total ? 'paused' : 'idle');
+  const timerHtml = (key, sec, label) => { const t = S.timers[key]; return M.timer({ key, label, left: t ? timerLeft(t) : sec, state: timerState(t) }); };
+
   screens.cook = (id) => {
     const r = R(id); if (!r) return screens.notfound();
     const k = Math.min(S.step, r.steps.length - 1);
     const last = k === r.steps.length - 1;
+    const here = timesIn(r.steps[k]).map((t) => timerHtml(`${id}:${k}:${t.sec}`, t.sec, t.label));
+    const elsewhere = Object.entries(S.timers).filter(([key, t]) => key.startsWith(id + ':') && +key.split(':')[1] !== k && t.end)
+      .map(([key, t]) => timerHtml(key, t.total, `Step ${+key.split(':')[1] + 1} · ${t.label}`));
+    const timers = [...here, ...elsewhere];
     return { tab: null, html: `
       ${M.topbar({ left: M.iconButton('close', 'Leave cook mode', { href: '#recipe-' + id }), title: M.label(`Step ${k + 1} of ${r.steps.length}`, { tag: 'span', strong: true }) })}
       <div class="mm-pad mm-stack" style="gap:var(--s-6);padding-top:var(--s-4)">
         ${M.progress(((k + 1) / r.steps.length) * 100, { label: 'Progress' })}
         ${M.label(r.name)}
         <div aria-live="polite">${M.display(r.steps[k], { tag: 'p' })}</div>
+        ${timers.length ? `<div class="mm-timers">${timers.join('')}</div>` : ''}
       </div>
       ${M.actionbar(M.button('Back', { variant: 'secondary', size: 'l', action: 'step', data: '-1', disabled: k === 0 }) + M.button(last ? 'Done' : 'Next step', { size: 'l', action: last ? 'cook-done' : 'step', data: last ? id : '1', trailing: last ? 'check' : 'arrow', block: true }))}` };
   };
@@ -374,6 +395,12 @@
     fav: (id) => { const r = R(id); r.fav = !r.fav; save(); toast(r.fav ? 'Added to favourites' : 'Removed from favourites', () => { r.fav = !r.fav; save(); }); },
     servings: (d) => { const id = currentId(); const r = R(id); S.servings[id] = Math.max(1, Math.min(24, (S.servings[id] || r.servings) + +d)); },
     step: (d) => { S.step = Math.max(0, S.step + +d); },
+    timer: (key) => {
+      const sec = +key.split(':')[2]; const t = S.timers[key] || (S.timers[key] = { total: sec, left: sec, end: null, done: false, label: timesIn(R(key.split(':')[0]).steps[+key.split(':')[1]]).find((x) => x.sec === sec)?.label || M.clock(sec) });
+      if (t.done) { t.done = false; t.left = t.total; }
+      if (t.end) { t.left = timerLeft(t); t.end = null; } else { t.end = Date.now() + t.left * 1000; }
+    },
+    'timer-reset': (key) => { delete S.timers[key]; },
     'cook-done': (id) => { S.step = 0; toast('Nicely done. Enjoy it.', null); go('#recipe-' + id); },
     'menu-pick': (id) => { S.activeMenu = id; save(); },
     'new-menu': () => { const id = 'm' + Date.now(); S.menus.push({ id, name: 'New menu', people: 2, items: [] }); S.activeMenu = id; save(); toast('New menu created', () => { S.menus = S.menus.filter((m) => m.id !== id); S.activeMenu = 'week'; save(); }); },
@@ -434,6 +461,18 @@
   document.addEventListener('pointerdown', (e) => { if (e.target.closest('[data-swipe]')) sy = e.clientY; });
   document.addEventListener('pointerup', (e) => { if (sy === null) return; const d = e.clientY - sy; sy = null;
     if (d < -40) { S.pick += 1; render(); } else if (d > 40) { S.pick -= 1; render(); } });
+
+  /* ---- timer tick: update digits in place; on finish, toast + re-render ------- */
+  setInterval(() => {
+    let finished = null;
+    Object.entries(S.timers).forEach(([key, t]) => {
+      if (!t.end) return;
+      const left = timerLeft(t);
+      const el = document.querySelector(`[data-timer="${key}"]`); if (el) el.textContent = M.clock(left);
+      if (left <= 0) { t.end = null; t.left = 0; t.done = true; finished = t; }
+    });
+    if (finished) { navigator.vibrate?.([200, 100, 200]); toast(`Timer done · ${finished.label}`, null); render(); }
+  }, 250);
 
   /* ---- drag to reorder collections ---------------------------------------- */
   const moveCol = (id, d) => { const i = S.collections.findIndex((c) => c.id === id); const j = i + d; if (j < 0 || j >= S.collections.length) return;
