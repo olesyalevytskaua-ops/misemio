@@ -1,0 +1,127 @@
+/* ==========================================================================
+   Misemio — design tokens  (v1.0)
+   THE ONLY FILE ALLOWED TO CONTAIN RAW COLOUR VALUES.
+   Layer 1: primitives (--mm-*)  — never used directly by components.
+   Layer 2: semantic tokens      — the only names components and screens use.
+   ========================================================================== */
+
+:root {
+  /* ---- Layer 1 · primitives ---------------------------------------------- */
+  --mm-paper:        #F6F3ED;  /* warm paper, 60% */
+  --mm-ink:          #1F1B18;  /* body ink */
+  --mm-deep-sage:    #314E41;  /* 10% — actions, nav, headings */
+  --mm-sage:         #A4B79F;  /* 25% — surfaces only, never text */
+  --mm-sage-pale:    #E5E9DE;  /* soft surface */
+  --mm-sage-mist:    #D5DDCD;  /* photo tone 2 */
+  --mm-sage-wash:    #DDE3D4;  /* photo tone 3 */
+  --mm-linen:        #E9E4D6;  /* photo tone 4 */
+  --mm-moss:         #556B57;  /* secondary text (5.2:1 on paper) */
+  --mm-hairline:     #C9D4C0;  /* rules, dividers */
+  --mm-lichen:       #8FA38A;  /* placeholder glyph — decorative only */
+  --mm-clay:         #D7C4AF;  /* 5% — decorative details only */
+  --mm-chartreuse:   #D3DE66;  /* dark-mode accent, fresh-sage CTA */
+  --mm-deep-sage-2:  #3B5A4C;  /* dark surface */
+  --mm-deep-sage-3:  #2A4338;  /* dark sunken */
+  --mm-fern:         #5F7A6B;  /* dark hairline */
+  --mm-sage-ink:     #2F3A30;  /* text on sage */
+
+  /* ---- Typography -------------------------------------------------------- */
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+  --font-label:   'DM Mono', ui-monospace, monospace;
+
+  --type-display-xl: 44px;   /* ONE per screen — the serif moment */
+  --type-display-l:  32px;
+  --type-display-m:  24px;
+  --type-serif:      18px;   /* editorial blurb / intro */
+  --type-body:       15px;
+  --type-body-s:     13px;
+  --type-button:     13px;
+  --type-label:      10px;
+  --type-label-l:    11px;
+  --type-tab:        9px;
+
+  --lh-display: 0.95;
+  --lh-serif:   1.3;
+  --lh-body:    1.5;
+
+  --track-label:  0.16em;
+  --track-button: 0.2em;
+  --track-tab:    0.1em;
+  --track-display: -0.01em;
+
+  /* ---- Spacing (4-pt) ---------------------------------------------------- */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px; --s-5: 20px;
+  --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px; --s-14: 56px;
+  --gutter: var(--s-6);          /* screen side margin */
+
+  /* ---- Size ---------------------------------------------------------------- */
+  --hit: 44px;                   /* minimum touch target */
+  --control-l: 60px;             /* primary action height */
+  --control-m: 44px;
+  --tabbar-h: 84px;
+  --screen-max: 430px;
+
+  /* ---- Shape ---------------------------------------------------------------- */
+  --radius-0: 0;                 /* editorial default: square */
+  --radius-round: 999px;         /* avatar, dots, toggles only */
+  --border: 1px;
+
+  /* ---- Motion ---------------------------------------------------------------- */
+  --dur-fast: 120ms;
+  --dur-base: 240ms;
+  --dur-slow: 420ms;
+  --ease: cubic-bezier(.2,.7,.2,1);
+}
+
+/* ---- Layer 2 · semantic — LIGHT (Option B) --------------------------------- */
+:root, [data-theme="light"] {
+  --bg:            var(--mm-paper);
+  --surface:       var(--mm-sage-pale);
+  --surface-2:     var(--mm-sage);
+  --text:          var(--mm-ink);
+  --text-strong:   var(--mm-deep-sage);
+  --text-2:        var(--mm-moss);
+  --line:          var(--mm-hairline);
+  --action-bg:     var(--mm-deep-sage);
+  --action-fg:     var(--mm-paper);
+  --accent-bg:     var(--mm-chartreuse);
+  --accent-fg:     var(--mm-ink);
+  --selected-bg:   var(--mm-deep-sage);
+  --selected-fg:   var(--mm-paper);
+  --focus:         var(--mm-deep-sage);
+  --decor:         var(--mm-clay);
+  --glyph:         var(--mm-lichen);
+  --tone-1: var(--mm-sage-pale); --tone-2: var(--mm-sage-mist);
+  --tone-3: var(--mm-linen);     --tone-4: var(--mm-sage-wash);
+  --scrim: rgba(31,27,24,.32);
+  color-scheme: light;
+}
+
+/* ---- Layer 2 · semantic — DARK (Option C) ---------------------------------- */
+[data-theme="dark"] {
+  --bg:            var(--mm-deep-sage);
+  --surface:       var(--mm-deep-sage-3);  /* sunken: paper text 9.7:1 (AAA) */
+  --surface-2:     var(--mm-deep-sage-2);
+  --text:          var(--mm-paper);
+  --text-strong:   var(--mm-paper);
+  --text-2:        var(--mm-hairline);
+  --line:          var(--mm-fern);
+  --action-bg:     var(--mm-chartreuse);
+  --action-fg:     var(--mm-ink);
+  --accent-bg:     var(--mm-chartreuse);
+  --accent-fg:     var(--mm-ink);
+  --selected-bg:   var(--mm-chartreuse);
+  --selected-fg:   var(--mm-ink);
+  --focus:         var(--mm-chartreuse);
+  --decor:         var(--mm-fern);
+  --glyph:         var(--mm-sage);
+  --tone-1: var(--mm-deep-sage-2); --tone-2: var(--mm-deep-sage-3);
+  --tone-3: var(--mm-deep-sage-2); --tone-4: var(--mm-deep-sage-3);
+  --scrim: rgba(0,0,0,.45);
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur-base: 0ms; --dur-slow: 0ms; }
+}

@@ -1,0 +1,249 @@
+/* ==========================================================================
+   Misemio — components (v1.0)
+   Uses ONLY semantic tokens from tokens.css. No raw colours, no primitives.
+   Every class here is documented on /ds.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: var(--font-body); font-size: var(--type-body); line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+}
+button { font: inherit; color: inherit; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.mm-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---- Text styles ---------------------------------------------------------- */
+.mm-display   { font-family: var(--font-display); font-style: italic; font-weight: 400;
+                font-size: var(--type-display-xl); line-height: var(--lh-display);
+                letter-spacing: var(--track-display); color: var(--text-strong); margin: 0; }
+.mm-display--l { font-size: var(--type-display-l); }
+.mm-display--m { font-size: var(--type-display-m); line-height: 1.1; }
+.mm-serif     { font-family: var(--font-display); font-size: var(--type-serif); line-height: var(--lh-serif); color: var(--text); margin: 0; }
+.mm-serif--clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mm-body      { font-size: var(--type-body); line-height: var(--lh-body); margin: 0; }
+.mm-body-s    { font-size: var(--type-body-s); line-height: var(--lh-body); color: var(--text-2); margin: 0; }
+.mm-label     { font-family: var(--font-label); font-size: var(--type-label); letter-spacing: var(--track-label);
+                text-transform: uppercase; color: var(--text-2); margin: 0; font-weight: 400; }
+.mm-label--l  { font-size: var(--type-label-l); }
+.mm-label--strong { color: var(--text-strong); font-weight: 500; }
+.mm-meta      { font-family: var(--font-label); font-size: var(--type-label); letter-spacing: var(--track-label);
+                text-transform: uppercase; color: var(--text-strong); margin: 0; }
+
+/* ---- Layout -------------------------------------------------------------- */
+.mm-screen { min-height: 100dvh; max-width: var(--screen-max); margin: 0 auto; position: relative;
+             background: var(--bg); padding-bottom: calc(var(--tabbar-h) + var(--s-6)); }
+.mm-pad    { padding-left: var(--gutter); padding-right: var(--gutter); }
+.mm-stack  { display: flex; flex-direction: column; }
+.mm-row    { display: flex; align-items: center; gap: var(--s-3); }
+.mm-spacer { flex: 1 1 auto; }
+.mm-rule   { border: 0; border-top: var(--border) solid var(--line); margin: 0; }
+
+/* ---- Top bar --------------------------------------------------------------- */
+.mm-topbar { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3);
+             padding: var(--s-12) var(--gutter) 0; min-height: calc(var(--hit) + var(--s-12)); }
+.mm-topbar__title { flex: 1; text-align: center; }
+
+/* ---- Monogram -------------------------------------------------------------- */
+.mm-monogram { width: var(--hit); height: var(--hit); border-radius: var(--radius-round);
+               background: var(--action-bg); color: var(--action-fg); display: inline-flex;
+               align-items: center; justify-content: center; font-family: var(--font-display);
+               font-style: italic; font-size: 26px; line-height: 1; text-decoration: none; flex: none; }
+
+/* ---- Icon ------------------------------------------------------------------ */
+.mm-icon { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.2;
+           stroke-linecap: round; stroke-linejoin: round; }
+.mm-icon--s { width: 16px; height: 16px; }
+
+/* ---- Buttons --------------------------------------------------------------- */
+.mm-btn { display: inline-flex; align-items: center; justify-content: space-between; gap: var(--s-3);
+          min-height: var(--control-m); padding: 0 var(--s-5); border: var(--border) solid transparent;
+          border-radius: var(--radius-0); font-family: var(--font-label); font-size: var(--type-button);
+          letter-spacing: var(--track-button); text-transform: uppercase; text-decoration: none;
+          cursor: pointer; white-space: nowrap; transition: background var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease); }
+.mm-btn--primary   { background: var(--action-bg); color: var(--action-fg); }
+.mm-btn--accent    { background: var(--accent-bg); color: var(--accent-fg); }
+.mm-btn--secondary { background: transparent; color: var(--text-strong); border-color: var(--text-strong); }
+.mm-btn--ghost     { background: transparent; color: var(--text-strong); padding: 0 var(--s-2); justify-content: center; }
+.mm-btn--l         { min-height: var(--control-l); padding: 0 var(--s-6); }
+.mm-btn--block     { width: 100%; min-width: 0; padding-left: var(--s-4); padding-right: var(--s-4); }
+.mm-btn--l.mm-btn--block { padding-left: var(--s-6); padding-right: var(--s-6); }
+.mm-btn--center    { justify-content: center; }
+.mm-btn:disabled   { opacity: .4; cursor: not-allowed; }
+.mm-btn--primary:hover { filter: brightness(1.08); }
+
+.mm-iconbtn { width: var(--hit); height: var(--hit); display: inline-flex; align-items: center; justify-content: center;
+              border: 0; background: transparent; color: var(--text-strong); cursor: pointer; padding: 0;
+              text-decoration: none; flex: none; }
+.mm-iconbtn[aria-pressed="true"] { color: var(--text-strong); }
+.mm-iconbtn[aria-pressed="true"] .mm-icon { fill: currentColor; }
+
+/* ---- Chip (filter / choice) -------------------------------------------- */
+.mm-chips { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.mm-chip  { min-height: 36px; padding: 0 var(--s-4); border: var(--border) solid var(--line); background: transparent;
+            color: var(--text-strong); font-family: var(--font-label); font-size: var(--type-label);
+            letter-spacing: var(--track-label); text-transform: uppercase; cursor: pointer;
+            display: inline-flex; align-items: center; gap: var(--s-2); text-decoration: none;
+            position: relative; }
+.mm-chip::after { content: ''; position: absolute; inset: -4px 0; } /* 44px hit area */
+.mm-chip[aria-pressed="true"], .mm-chip[aria-current="true"] { background: var(--selected-bg); color: var(--selected-fg); border-color: var(--selected-bg); }
+
+/* ---- Tag (removable) ------------------------------------------------------ */
+.mm-tag { display: inline-flex; align-items: center; gap: var(--s-1); min-height: 28px; padding: 0 var(--s-1) 0 var(--s-3);
+          background: var(--surface); color: var(--text-strong); font-family: var(--font-label);
+          font-size: var(--type-label); letter-spacing: var(--track-label); text-transform: uppercase; }
+.mm-tag button { width: 28px; height: 28px; border: 0; background: transparent; cursor: pointer; color: inherit; padding: 0; }
+
+/* ---- Field ---------------------------------------------------------------- */
+.mm-field { display: flex; align-items: center; gap: var(--s-3); min-height: 52px; padding: 0 var(--s-4);
+            border-bottom: var(--border) solid var(--text-strong); color: var(--text-strong); }
+.mm-field input, .mm-field textarea { flex: 1; min-width: 0; border: 0; background: transparent; outline: 0;
+            font-family: var(--font-body); font-size: var(--type-body); color: var(--text); }
+.mm-field input::placeholder, .mm-field textarea::placeholder { color: var(--text-2); }
+.mm-field:focus-within { box-shadow: 0 2px 0 0 var(--focus); }
+.mm-field--box { border: var(--border) solid var(--line); background: var(--surface); }
+
+/* ---- Segmented ------------------------------------------------------------ */
+.mm-segmented { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; border: var(--border) solid var(--text-strong); }
+.mm-segmented button { min-height: var(--hit); border: 0; background: transparent; color: var(--text-strong);
+            font-family: var(--font-label); font-size: var(--type-label); letter-spacing: var(--track-label);
+            text-transform: uppercase; cursor: pointer; }
+.mm-segmented button[aria-pressed="true"] { background: var(--selected-bg); color: var(--selected-fg); }
+
+/* ---- Stepper -------------------------------------------------------------- */
+.mm-stepper { display: inline-flex; align-items: center; border: var(--border) solid var(--line); }
+.mm-stepper button { width: var(--hit); height: var(--hit); border: 0; background: transparent; cursor: pointer; color: var(--text-strong); font-size: 18px; }
+.mm-stepper output { min-width: 64px; text-align: center; font-family: var(--font-label); font-size: var(--type-label-l); letter-spacing: var(--track-label); color: var(--text-strong); }
+
+/* ---- Check row ------------------------------------------------------------ */
+.mm-check { display: flex; align-items: flex-start; gap: var(--s-3); min-height: var(--hit); padding: var(--s-3) 0;
+            border-bottom: var(--border) solid var(--line); cursor: pointer; }
+.mm-check input { appearance: none; -webkit-appearance: none; margin: 2px 0 0; width: 20px; height: 20px; flex: none;
+            border: var(--border) solid var(--text-strong); border-radius: var(--radius-0); background: transparent; cursor: pointer; display: grid; place-items: center; }
+.mm-check input:checked { background: var(--selected-bg); border-color: var(--selected-bg); }
+.mm-check input:checked::after { content: ''; width: 10px; height: 5px; border-left: 1.5px solid var(--selected-fg);
+            border-bottom: 1.5px solid var(--selected-fg); transform: translateY(-1px) rotate(-45deg); }
+.mm-check__text { flex: 1; }
+.mm-check__qty { font-family: var(--font-label); font-size: var(--type-label-l); letter-spacing: .06em; color: var(--text-2); white-space: nowrap; }
+.mm-check input:checked ~ .mm-check__text { color: var(--text-2); text-decoration: line-through; text-decoration-color: var(--line); }
+
+/* ---- Toggle --------------------------------------------------------------- */
+.mm-toggle { appearance: none; -webkit-appearance: none; width: 44px; height: 26px; border-radius: var(--radius-round);
+             background: var(--line); position: relative; cursor: pointer; margin: 0; flex: none;
+             transition: background var(--dur-fast) var(--ease); }
+.mm-toggle::after { content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; border-radius: var(--radius-round);
+             background: var(--bg); transition: transform var(--dur-base) var(--ease); }
+.mm-toggle:checked { background: var(--selected-bg); }
+.mm-toggle:checked::after { transform: translateX(18px); }
+
+/* ---- List row ------------------------------------------------------------- */
+.mm-list { list-style: none; margin: 0; padding: 0; }
+.mm-listrow { display: flex; align-items: center; gap: var(--s-4); padding: var(--s-3) 0; min-height: 72px;
+              border-bottom: var(--border) solid var(--line); text-decoration: none; color: var(--text); }
+.mm-listrow__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.mm-listrow__title { font-family: var(--font-display); font-style: italic; font-size: 22px; line-height: 1.1; color: var(--text-strong);
+              white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mm-listrow__chev { color: var(--text-2); }
+.mm-listrow--plain { min-height: 56px; }
+
+/* ---- Index row (contents page) -------------------------------------- */
+.mm-indexrow { display: flex; align-items: center; min-height: 68px; border-bottom: var(--border) solid var(--line);
+               color: var(--text-strong); }
+.mm-indexrow__n { width: var(--hit); min-height: var(--hit); flex: none; display: inline-flex; align-items: center;
+               font-family: var(--font-label); font-size: var(--type-label-l); letter-spacing: var(--track-label); color: var(--text-2); }
+.mm-indexrow__n--drag { cursor: grab; touch-action: none; }
+.mm-indexrow__link { flex: 1; min-width: 0; min-height: var(--hit); display: flex; align-items: center; gap: var(--s-3);
+               padding: var(--s-2) 0; color: inherit; text-decoration: none; }
+.mm-indexrow__title { flex: 1; min-width: 0; font-family: var(--font-display); font-style: italic; font-weight: 400;
+               font-size: var(--type-display-l); line-height: 1.05; letter-spacing: var(--track-display); color: var(--text-strong);
+               display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mm-indexrow__count { font-family: var(--font-label); font-size: var(--type-label-l); letter-spacing: var(--track-label); color: var(--text-2); }
+.mm-indexrow--add { width: 100%; border: 0; border-bottom: 0; background: transparent; cursor: pointer; text-align: left; padding: 0; }
+.mm-indexrow--add .mm-indexrow__title { color: var(--text-2); }
+
+/* ---- Section header -------------------------------------------------- */
+.mm-section { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3);
+              padding-top: var(--s-8); padding-bottom: var(--s-3); border-bottom: var(--border) solid var(--line); }
+.mm-section a, .mm-section button { font-family: var(--font-label); font-size: var(--type-label); letter-spacing: var(--track-label);
+              text-transform: uppercase; color: var(--text-strong); background: none; border: 0; cursor: pointer; min-height: var(--hit);
+              display: inline-flex; align-items: center; text-decoration: none; padding: 0; }
+
+/* ---- Photo placeholder ---------------------------------------------- */
+.mm-photo { position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
+            background: var(--tone-1); flex: none; }
+.mm-photo[data-tone="2"] { background: var(--tone-2); }
+.mm-photo[data-tone="3"] { background: var(--tone-3); }
+.mm-photo[data-tone="4"] { background: var(--tone-4); }
+.mm-photo__letter { position: relative; font-family: var(--font-display); font-style: italic; line-height: 1; color: var(--glyph); }
+.mm-photo__sprig { position: absolute; right: 8%; bottom: -6%; height: 92%; opacity: .28; stroke: var(--text-strong); fill: none;
+            stroke-width: 1; stroke-linecap: round; stroke-linejoin: round; }
+.mm-photo__cap { position: absolute; left: var(--s-4); bottom: var(--s-3); right: var(--s-4); display: flex; justify-content: space-between; }
+
+/* ---- Tab bar -------------------------------------------------------------- */
+.mm-tabbar { position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; width: 100%; max-width: var(--screen-max);
+             display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--s-1);
+             padding: var(--s-2) var(--s-2) calc(var(--s-3) + env(safe-area-inset-bottom)); background: var(--bg);
+             border-top: var(--border) solid var(--line); z-index: 20; }
+.mm-tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 58px;
+          color: var(--text-2); text-decoration: none; font-family: var(--font-label); font-size: var(--type-tab); letter-spacing: var(--track-tab); }
+.mm-tab[aria-current="page"] { background: var(--selected-bg); color: var(--selected-fg); font-weight: 500; }
+.mm-tab[aria-current="page"] .mm-icon { stroke-width: 1.8; }
+
+/* ---- Side rail (vertical swipe index) ------------------------------- */
+.mm-rail { display: flex; flex-direction: column; align-items: center; gap: var(--s-2); width: var(--hit);
+           font-family: var(--font-label); font-size: var(--type-label); letter-spacing: var(--track-label); color: var(--text-2); }
+.mm-rail__name { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; max-height: 96px; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; }
+.mm-rail__track { position: relative; width: 1px; height: 120px; background: var(--line); }
+.mm-rail__seg { position: absolute; left: -1px; width: 3px; background: var(--text-strong); transition: top var(--dur-base) var(--ease); }
+.mm-rail__idx { color: var(--text-strong); font-weight: 500; }
+
+/* ---- Progress ------------------------------------------------------------- */
+.mm-progress { height: 3px; background: var(--line); position: relative; }
+.mm-progress > span { position: absolute; inset: 0 auto 0 0; background: var(--text-strong); transition: width var(--dur-base) var(--ease); }
+
+/* ---- Data table (nutrition) ---------------------------------------- */
+.mm-datarow { display: flex; justify-content: space-between; align-items: baseline; padding: var(--s-2) 0; border-bottom: var(--border) solid var(--line); }
+.mm-datarow dt { font-size: var(--type-body-s); color: var(--text); }
+.mm-datarow dd { margin: 0; font-family: var(--font-label); font-size: var(--type-label-l); color: var(--text-strong); }
+
+/* ---- Stat ----------------------------------------------------------------- */
+.mm-stats { display: grid; grid-template-columns: repeat(3, 1fr); border-top: var(--border) solid var(--line); border-bottom: var(--border) solid var(--line); }
+.mm-stat { padding: var(--s-3) 0; display: flex; flex-direction: column; gap: 2px; }
+.mm-stat + .mm-stat { padding-left: var(--s-3); border-left: var(--border) solid var(--line); }
+.mm-stat b { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: var(--type-display-m); color: var(--text-strong); line-height: 1; }
+
+/* ---- Sheet ---------------------------------------------------------------- */
+.mm-scrim { position: fixed; inset: 0; background: var(--scrim); z-index: 40; animation: mm-fade var(--dur-base) var(--ease); }
+.mm-sheet { position: fixed; left: 50%; bottom: 0; transform: translateX(-50%); width: 100%; max-width: var(--screen-max); z-index: 41;
+            background: var(--bg); padding: var(--s-5) var(--gutter) calc(var(--s-6) + env(safe-area-inset-bottom));
+            border-top: var(--border) solid var(--line); animation: mm-up var(--dur-base) var(--ease); max-height: 86dvh; overflow: auto; }
+.mm-sheet__grip { width: 36px; height: 3px; background: var(--line); margin: 0 auto var(--s-4); }
+.mm-option { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 52px; border: 0;
+             border-bottom: var(--border) solid var(--line); background: transparent; cursor: pointer; text-align: left;
+             font-size: var(--type-body); color: var(--text); padding: 0; }
+.mm-option[aria-checked="true"] { color: var(--text-strong); font-weight: 500; }
+
+/* ---- Toast with undo ------------------------------------------------ */
+.mm-toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--tabbar-h) + var(--s-4));
+            width: calc(100% - 2 * var(--gutter)); max-width: calc(var(--screen-max) - 2 * var(--gutter)); z-index: 50;
+            background: var(--text); color: var(--bg); display: flex; align-items: center; gap: var(--s-3);
+            padding: 0 var(--s-2) 0 var(--s-4); min-height: 52px; font-size: var(--type-body-s); animation: mm-up var(--dur-base) var(--ease); }
+.mm-toast button { margin-left: auto; min-height: var(--hit); padding: 0 var(--s-3); border: 0; background: transparent; color: inherit;
+            font-family: var(--font-label); font-size: var(--type-label); letter-spacing: var(--track-label); text-decoration: underline; cursor: pointer; }
+
+/* ---- Empty state ---------------------------------------------------- */
+.mm-empty { padding: var(--s-12) 0; display: flex; flex-direction: column; gap: var(--s-3); align-items: flex-start; }
+
+/* ---- Bottom action bar ---------------------------------------------- */
+.mm-actionbar { position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; width: 100%; max-width: var(--screen-max); z-index: 20;
+                display: flex; gap: var(--s-2); padding: var(--s-3) var(--gutter) calc(var(--s-4) + env(safe-area-inset-bottom));
+                background: var(--bg); border-top: var(--border) solid var(--line); }
+
+/* ---- Dot (new) ------------------------------------------------------ */
+.mm-dot { width: 9px; height: 9px; border-radius: var(--radius-round); background: var(--text-strong); border: 2px solid var(--bg); display: inline-block; }
+
+@keyframes mm-up { from { transform: translate(-50%, 16px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+@keyframes mm-fade { from { opacity: 0; } to { opacity: 1; } }

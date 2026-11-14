@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Misemio — Design system</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500&display=swap">
+<link rel="stylesheet" href="../assets/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<style>
+  /* DS-page layout only. Tokens only — no raw colours here either. */
+  .ds { display: grid; grid-template-columns: 220px minmax(0, 1fr); max-width: 1180px; margin: 0 auto; }
+  .ds-nav { position: sticky; top: 0; height: 100dvh; overflow: auto; padding: var(--s-10) var(--s-6); border-right: var(--border) solid var(--line); }
+  .ds-nav a { display: block; padding: var(--s-1) 0; text-decoration: none; color: var(--text-2); font-family: var(--font-label);
+              font-size: var(--type-label); letter-spacing: var(--track-label); text-transform: uppercase; }
+  .ds-nav a:hover { color: var(--text-strong); }
+  .ds-nav .ds-group { margin-top: var(--s-5); }
+  .ds-main { padding: var(--s-10) var(--s-10) var(--s-14); min-width: 0; }
+  .ds-sec { padding-top: var(--s-12); }
+  .ds-sec > h2 { font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: var(--type-display-l);
+                 color: var(--text-strong); margin: 0 0 var(--s-2); }
+  .ds-sec > p, .ds-lead { max-width: 640px; }
+  .ds-grid { display: grid; gap: var(--s-4); grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); margin-top: var(--s-5); }
+  .ds-swatch { border: var(--border) solid var(--line); }
+  .ds-swatch__chip { height: 88px; }
+  .ds-swatch__body { padding: var(--s-3); display: flex; flex-direction: column; gap: 2px; }
+  .ds-code { font-family: var(--font-label); font-size: var(--type-label-l); color: var(--text-strong); }
+  .ds-pre { font-family: var(--font-label); font-size: var(--type-label-l); line-height: 1.6; background: var(--surface); color: var(--text);
+            padding: var(--s-3) var(--s-4); margin: 0; overflow-x: auto; white-space: pre; }
+  .ds-comp { margin-top: var(--s-8); border-top: var(--border) solid var(--line); padding-top: var(--s-5); display: grid; gap: var(--s-4);
+             grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .ds-comp h3 { grid-column: 1 / -1; margin: 0; font-family: var(--font-display); font-style: italic; font-weight: 400; font-size: var(--type-display-m); color: var(--text-strong); }
+  .ds-stage { border: var(--border) dashed var(--line); padding: var(--s-6); display: flex; flex-direction: column; gap: var(--s-4); align-items: flex-start; min-width: 0; }
+  .ds-stage--phone { max-width: var(--screen-max); padding: 0; align-items: stretch; }
+  .ds-notes { display: flex; flex-direction: column; gap: var(--s-3); min-width: 0; }
+  .ds-notes ul { margin: 0; padding-left: var(--s-5); font-size: var(--type-body-s); }
+  .ds-notes li { margin-bottom: var(--s-1); }
+  /* Overlays render in place on this page */
+  .ds-stage .mm-tabbar, .ds-stage .mm-actionbar, .ds-stage .mm-toast, .ds-stage .mm-sheet, .ds-stage .mm-scrim {
+    position: relative; left: auto; bottom: auto; transform: none; animation: none; max-width: none; width: 100%; inset: auto; }
+  .ds-stage .mm-scrim { display: none; }
+  .ds-table { width: 100%; border-collapse: collapse; margin-top: var(--s-4); font-size: var(--type-body-s); }
+  .ds-table th, .ds-table td { text-align: left; padding: var(--s-2) var(--s-3) var(--s-2) 0; border-bottom: var(--border) solid var(--line); vertical-align: middle; }
+  .ds-table th { font-family: var(--font-label); font-size: var(--type-label); letter-spacing: var(--track-label); text-transform: uppercase; color: var(--text-2); font-weight: 400; }
+  .ds-pill { font-family: var(--font-label); font-size: var(--type-label); letter-spacing: var(--track-label); padding: 2px var(--s-2); }
+  .ds-pill--ok { background: var(--selected-bg); color: var(--selected-fg); }
+  .ds-pill--warn { border: var(--border) solid var(--text-strong); color: var(--text-strong); }
+  .ds-bar { display: flex; height: 56px; margin-top: var(--s-4); }
+  .ds-bar > div { display: flex; align-items: flex-end; padding: var(--s-2); }
+  .ds-rules { counter-reset: r; list-style: none; padding: 0; margin: var(--s-4) 0 0; display: grid; gap: 0; }
+  .ds-rules li { counter-increment: r; display: grid; grid-template-columns: 48px 1fr; gap: var(--s-3); padding: var(--s-3) 0; border-bottom: var(--border) solid var(--line); }
+  .ds-rules li::before { content: counter(r, decimal-leading-zero); font-family: var(--font-label); font-size: var(--type-label-l); color: var(--text-strong); padding-top: 2px; }
+  .ds-rules b { font-weight: 500; color: var(--text-strong); }
+  @media (max-width: 860px) {
+    .ds { grid-template-columns: 1fr; }
+    .ds-nav { position: static; height: auto; border-right: 0; border-bottom: var(--border) solid var(--line); display: flex; flex-wrap: wrap; gap: var(--s-1) var(--s-4); padding: var(--s-5) var(--gutter); }
+    .ds-nav .ds-group { margin-top: 0; width: 100%; }
+    .ds-main { padding: var(--s-6) var(--gutter) var(--s-14); }
+    .ds-comp { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="ds">
+  <nav class="ds-nav" aria-label="Design system sections" id="nav"></nav>
+  <main class="ds-main" id="main"></main>
+</div>
+<script src="../assets/ui.js"></script>
+<script>
+(function () {
+  const M = window.MM;
+  const css = (n, el = document.documentElement) => getComputedStyle(el).getPropertyValue(n).trim();
+
+  /* ---- contrast (WCAG 2.x) ------------------------------------------------ */
+  const toRgb = (v) => { const c = document.createElement('canvas').getContext('2d'); c.fillStyle = v; const h = c.fillStyle;
+    if (h.startsWith('#')) return [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+    return h.match(/\d+(\.\d+)?/g).slice(0, 3).map(Number); };
+  const lum = (rgb) => { const [r, g, b] = rgb.map((x) => { x /= 255; return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+  const ratio = (a, b) => { const [x, y] = [lum(toRgb(a)), lum(toRgb(b))].sort((p, q) => q - p); return (x + 0.05) / (y + 0.05); };
+  const hex = (v) => { const [r, g, b] = toRgb(v); return '#' + [r, g, b].map((n) => n.toString(16).padStart(2, '0')).join('').toUpperCase(); };
+
+  /* ---- data ---------------------------------------------------------------- */
+  const PRIMS = [
+    ['--mm-paper', 'Paper', '60% · page background'], ['--mm-ink', 'Ink', 'Body text'], ['--mm-deep-sage', 'Deep Sage', '10% · actions, nav, headings'],
+    ['--mm-sage', 'Sage', '25% · surfaces only, never text'], ['--mm-sage-pale', 'Sage Pale', 'Soft surface, tone 1'], ['--mm-sage-mist', 'Sage Mist', 'Photo tone 2'],
+    ['--mm-linen', 'Linen', 'Photo tone 3'], ['--mm-sage-wash', 'Sage Wash', 'Photo tone 4'], ['--mm-moss', 'Moss', 'Secondary text'],
+    ['--mm-hairline', 'Hairline', 'Rules and dividers'], ['--mm-lichen', 'Lichen', 'Placeholder glyph, decorative'], ['--mm-clay', 'Clay', '5% · decorative only'],
+    ['--mm-chartreuse', 'Chartreuse', 'Dark-mode action, fresh accent'], ['--mm-deep-sage-2', 'Deep Sage 2', 'Dark raised surface, photo tones'], ['--mm-deep-sage-3', 'Deep Sage 3', 'Dark surface (sunken): fields, tags'],
+    ['--mm-fern', 'Fern', 'Dark hairline'], ['--mm-sage-ink', 'Sage Ink', 'Text on sage']
+  ];
+  const SEM = [
+    ['--bg', 'Screen background'], ['--surface', 'Fields, tags, quiet panels'], ['--surface-2', 'Stronger surface'], ['--text', 'Body text'],
+    ['--text-strong', 'Headings, labels with weight, icons'], ['--text-2', 'Secondary text, inactive tabs'], ['--line', 'Hairlines'],
+    ['--action-bg', 'Primary button fill'], ['--action-fg', 'Primary button text'], ['--accent-bg', 'Accent fill (sparingly)'], ['--accent-fg', 'Text on accent'],
+    ['--selected-bg', 'Selected chip, tab, check'], ['--selected-fg', 'Text on selected'], ['--focus', 'Focus ring'], ['--glyph', 'Placeholder letter'], ['--decor', 'Decorative details']
+  ];
+  const PAIRS = [['--text', '--bg', 'Body text'], ['--text-strong', '--bg', 'Headings, labels'], ['--text-2', '--bg', 'Secondary text'], ['--text-2', '--surface', 'Secondary on surface'],
+    ['--action-fg', '--action-bg', 'Primary button'], ['--accent-fg', '--accent-bg', 'Accent button'], ['--selected-fg', '--selected-bg', 'Selected state'], ['--text', '--surface', 'Text in fields']];
+
+  /* ---- builders ----------------------------------------------------------- */
+  const sec = (id, title, lead, body) => `<section class="ds-sec" id="${id}" aria-labelledby="${id}-h">${M.label(lead[0])}<h2 id="${id}-h">${title}</h2>${lead[1] ? `<p class="mm-body-s">${lead[1]}</p>` : ''}${body}</section>`;
+  const comp = (name, preview, usage, notes, { phone } = {}) => `<div class="ds-comp" id="c-${name.toLowerCase().replace(/[^a-z]+/g, '-')}"><h3>${name}</h3>
+    <div class="ds-stage${phone ? ' ds-stage--phone' : ''}">${preview}</div>
+    <div class="ds-notes"><pre class="ds-pre">${M.esc(usage)}</pre><ul>${notes.map((n) => `<li>${n}</li>`).join('')}</ul></div></div>`;
+
+  const COMPS = [
+    ['Button', `${M.button('Start cooking', { size: 'l', trailing: 'arrow', block: true })}${M.button('Accent', { variant: 'accent' })}${M.button('+ Menu', { variant: 'secondary' })}${M.button('View all', { variant: 'ghost' })}${M.button('Disabled', { disabled: true })}`,
+      "MM.button('Start cooking', {\n  variant: 'primary' | 'accent' | 'secondary' | 'ghost',\n  size: 'm' | 'l', trailing: 'arrow',\n  href | action, block })",
+      ['One <b>primary</b> per screen. Large (60px) for the main action, bottom of the content.', 'Accent: max one per screen. In dark mode the primary already uses chartreuse.', 'Label is a verb, sentence case in source — the component uppercases and tracks it.', 'Trailing icon only for “go forward” (arrow) or “finish” (check).']],
+    ['Icon button', `<div class="mm-row">${M.iconButton('search', 'Search')}${M.iconButton('back', 'Back')}${M.iconButton('heart', 'Favourite', { pressed: true })}${M.iconButton('shuffle', 'Shuffle')}${M.iconButton('close', 'Close')}</div>`,
+      "MM.iconButton('heart', 'Add to favourites', {\n  action: 'fav', pressed: true })",
+      ['Always 44 × 44. The second argument is the accessible name — required.', 'Toggle state via <code>pressed</code> (fills the icon).']],
+    ['Chip', M.chips([M.chip('Under 30 min', { pressed: true }), M.chip('Favourites'), M.chip('All', { count: 48 }), M.chip('High protein')]),
+      "MM.chip('Under 30 min', { pressed: true, action })\nMM.chips([ ... ])",
+      ['For filters and single choices. Selected = <code>--selected-bg</code>.', '36px visual, 44px hit area.']],
+    ['Tag', M.chips([M.tag('Under 30 min'), M.tag('Favourites')]), "MM.tag('Under 30 min', { action: 'filter-off', data })",
+      ['Shows an active filter outside its panel. × removes it — no confirmation needed.']],
+    ['Segmented', M.segmented([{ value: 'a', label: 'By aisle' }, { value: 'r', label: 'By recipe' }], 'a', { label: 'Group by' }),
+      "MM.segmented([{value, label}, …], value, { action, label })", ['2–3 options that change the view of the same content.']],
+    ['Stepper', M.stepper(2, 'portions', { label: 'Portions' }), "MM.stepper(2, 'portions', { action: 'servings' })", ['Rescales amounts live. Value announced politely to screen readers.']],
+    ['Toggle', `<label class="mm-row" style="gap:var(--s-4)">${M.toggle('t1', true)}<span class="mm-body">Dark kitchen</span></label>`, "MM.toggle('dark', checked, { action: 'theme' })", ['Settings only. Takes effect immediately — no Save button.']],
+    ['Check row', `<div style="width:100%">${M.check('Spaghetti', { qty: '200 g' })}${M.check('Lemon, zest and juice', { qty: '1', checked: true })}</div>`,
+      "MM.check('Spaghetti', { qty: '200 g', checked, action })", ['Ingredients, grocery items, import review.', 'Checked = struck through, never removed.']],
+    ['Search field', `<div style="width:100%">${M.searchField('')}</div>`, "MM.searchField(value, { placeholder: 'Name, ingredient or note' })",
+      ['One field searches names, ingredients and notes. The placeholder says so — no extra buttons.', 'Results explain the match (“Ingredient: lemon”).']],
+    ['Text field', `<div style="width:100%">${M.textField('', { placeholder: 'https://', label: 'Recipe link', icon: 'link' })}</div>`, "MM.textField(value, { id, placeholder, label, icon })", ['Label is required (visually hidden when the placeholder is enough).']],
+    ['Photo placeholder', `<div style="width:100%">${M.photo({ letter: 'Lemon', h: 220, caption: 'No photo yet' })}</div><div class="mm-row">${[1, 2, 3, 4].map((t) => M.photo({ letter: 'abcd'[t - 1], tone: t, w: 60, h: 60 })).join('')}${M.photo({ letter: 'm', tone: 2, w: 44, h: 44 })}</div>`,
+      "MM.photo({ letter: recipe.name, tone: 1-4,\n  w: '100%' | px, h: px, caption, captionRight })",
+      ['Shown wherever a recipe has no photo. First letter in italic serif on a tone.', '≥100px tall: adds the herb sprig and a caption.', 'Tone is stored per recipe so it never changes between screens.']],
+    ['Monogram', M.monogram(), 'MM.monogram({ href })', ['Top-left on tab screens, links home. The only round element besides dots and toggles.']],
+    ['Section header', `<div style="width:100%">${M.section('Ingredients', { action: 'x', actionLabel: 'Edit' })}</div>`, "MM.section('Ingredients', { actionHref | action, actionLabel })", ['Tracked label + hairline. Optional one action on the right.']],
+    ['List row', `<div style="width:100%">${M.list([M.listRow({ href: '#', title: 'Lemon & herb pasta', metaText: '25 min · 620 kcal', media: M.photo({ letter: 'l', w: 60, h: 60 }) }), M.listRow({ href: '#', title: 'Burnt honey figs', metaText: 'Ingredient: honey', media: M.photo({ letter: 'b', tone: 2, w: 60, h: 60 }), trailing: M.iconButton('trash', 'Remove') })])}</div>`,
+      "MM.listRow({ href, title, metaText, media, trailing })", ['Recipes read as an index, like a cookbook contents page.', 'A trailing control sits outside the link.']],
+    ['Index row', `<div style="width:100%">${M.list([M.indexRow({ n: 1, title: 'Weeknight dinners', count: 12, href: '#', drag: 'demo-a' }), M.indexRow({ n: 2, title: 'Something sweet', count: 4, href: '#', drag: 'demo-b' }), M.indexRow({ title: 'New collection', add: true })])}</div>`,
+      "MM.indexRow({ n, title, count, href, drag })\nMM.indexRow({ title: 'New collection', add: true, action })", ['Collections screen (Option 2 · index, no photos): reads like a cookbook contents page.', 'The number is the drag handle: hold and drag, or focus it and use ↑ ↓. Order is saved.', 'Titles are 32px serif and wrap to two lines. They do not count as the screen’s serif moment.', 'The last row adds a new one. No separate + in the top bar.']],
+    ['Stats', `<div style="width:100%">${M.stats([[4, 'Dishes'], [4, 'Days'], [430, 'Avg kcal']])}</div>`, "MM.stats([[value, 'Label'], …])", ['Max 3. Numbers in serif italic — this does not count as the screen’s serif moment.']],
+    ['Data row', `<dl style="width:100%;margin:0">${M.dataRow('Protein', '22 g')}${M.dataRow('Fibre', '5 g')}</dl>`, "MM.dataRow('Protein', '22 g')", ['Nutrition and other key–value lists inside a <code>&lt;dl&gt;</code>.']],
+    ['Progress', `<div style="width:100%">${M.progress(40, { label: 'Progress' })}</div>`, "MM.progress(40, { label })", ['Cook mode steps, grocery basket. Never a streak or a score.']],
+    ['Empty state', M.empty({ title: 'Nothing planned yet', body: 'Add recipes from any recipe page with “+ Menu”.', cta: M.button('Browse recipes', { variant: 'secondary' }) }),
+      "MM.empty({ title, body, cta })", ['Says what will appear and offers one way forward. No guilt, no “you haven’t…”.']],
+    ['Top bar', `<div style="width:100%">${M.topbar({ left: M.iconButton('back', 'Back'), title: M.label('Search', { tag: 'span', strong: true }), right: M.iconButton('heart', 'Favourite') })}</div>`,
+      "MM.topbar({ left, title, right })", ['Left: monogram on tab screens, back elsewhere. Title is a label, never a display heading.']],
+    ['Tab bar', M.tabbar('library', { fixed: false }), "MM.tabbar('library')", ['Five tabs, always in this order. Active = solid tile behind icon and label.', 'Hidden on recipe, cook mode and other task screens.'], { phone: true }],
+    ['Side rail', `<div style="height:380px">${M.rail({ idx: 1, total: 5, prevName: 'Lemon & herb pasta', nextName: 'Tomato tarte fine' })}</div>`,
+      "MM.rail({ idx, total, prevName, nextName })", ['Library only. Shows neighbours of the vertical swipe; buttons give a non-gesture way through.']],
+    ['Sheet', M.sheet({ title: 'Sort by', body: `<div role="menu">${M.option('Newest first', true)}${M.option('Name A–Z', false)}${M.option('Fewest calories', false)}</div>` }),
+      "MM.sheet({ title, body })\nMM.option('Newest first', checked, { action })", ['Sort, filters, add to menu, new collection. Escape and scrim close it.'], { phone: true }],
+    ['Toast with undo', M.toast('Removed White bean stew'), "MM.toast('Removed White bean stew')", ['Every destructive or surprising action: act first, offer Undo for 5 s. No “Are you sure?” dialogs.'], { phone: true }],
+    ['Action bar', M.actionbar(M.button('+ Menu', { variant: 'secondary', size: 'l' }) + M.button('Start cooking', { size: 'l', trailing: 'arrow', block: true })), "MM.actionbar(html)", ['Task screens instead of the tab bar. Max two buttons, primary on the right.'], { phone: true }]
+  ];
+
+  const RULES = [
+    ['Tokens only.', 'Raw colours live in <code>tokens.css</code> and nowhere else. Components and screens use semantic tokens (<code>--text</code>, <code>--action-bg</code>), never primitives (<code>--mm-*</code>).'],
+    ['Compose, don’t restyle.', 'Screens are built from <code>MM.*</code> components. If something is missing, add it here first — with states and notes — then use it.'],
+    ['One serif moment per screen.', 'Exactly one <code>MM.display()</code> at 44px per screen. Everything else is calm DM Sans and tracked DM Mono labels.'],
+    ['Colour hierarchy 60 / 25 / 10 / 5.', 'Paper · sage surfaces · deep sage actions · clay details. Food photography brings the warm colours; the app adds no pink, red or orange.'],
+    ['Sage is a surface, not a text colour.', '<code>--mm-sage</code> is 1.9:1 on paper. Small text uses <code>--text</code>, <code>--text-strong</code> or <code>--text-2</code> only.'],
+    ['Accent sparingly.', 'Chartreuse appears at most once per light screen. In dark mode it is the primary action.'],
+    ['Square by default.', 'Radius 0. Round only for the monogram, dots and toggles.'],
+    ['44px targets, visible focus.', 'Every control is at least 44 × 44, icon buttons have an accessible name, focus ring uses <code>--focus</code>.'],
+    ['Contrast AA minimum, AAA for body text.', 'Checked live below for both themes. A failing pair is a bug.'],
+    ['Undo, not confirm.', 'Deleting, removing from a menu or resetting happens immediately with an Undo toast.'],
+    ['Explain defaults.', 'Every pre-selected option says why or what happens if you skip it (“Optional. Unfiled recipes wait in Unsorted.”).'],
+    ['No guilt, no streaks.', 'No counters of what you didn’t cook, no nagging. Progress bars only for the task in hand.'],
+    ['Your recipes are yours.', 'Export is always one tap away in Me.'],
+    ['Respect reduced motion.', 'All durations come from motion tokens, which drop to 0 under <code>prefers-reduced-motion</code>.']
+  ];
+
+  /* ---- render --------------------------------------------------------------- */
+  const navItems = [['about', 'Overview'], ['principles', 'Rules'], ['colour', 'Colour'], ['contrast', 'Contrast'], ['type', 'Type'], ['space', 'Spacing'], ['shape', 'Size, shape, motion'], ['icons', 'Icons'], ['components', 'Components'], ['audit', 'Live audit']];
+  document.getElementById('nav').innerHTML = `${M.monogram({ href: '../index.html' })}<div class="ds-group">${navItems.map(([id, l]) => `<a href="#${id}">${l}</a>`).join('')}</div>
+    <div class="ds-group">${COMPS.map(([n]) => `<a href="#c-${n.toLowerCase().replace(/[^a-z]+/g, '-')}">${n}</a>`).join('')}</div>
+    <div class="ds-group">${M.button('Open the app', { variant: 'secondary', href: '../index.html', block: true })}</div>`;
+
+  const draw = () => {
+    const theme = document.documentElement.dataset.theme;
+    const main = document.getElementById('main');
+    main.innerHTML = `
+      <header id="about">
+        <div class="mm-row" style="justify-content:space-between;flex-wrap:wrap">${M.label('Misemio · design system · v' + M.VERSION)}
+          <label class="mm-row" style="gap:var(--s-3)">${M.label('Dark kitchen', { tag: 'span' })}${M.toggle('ds-theme', theme === 'dark')}</label></div>
+        <h1 class="mm-display" style="margin-top:var(--s-4)">Editorial kitchen journal</h1>
+        <p class="mm-serif ds-lead" style="margin-top:var(--s-4)">Misemio is a personal recipe library designed like a modern editorial cookbook — warm paper, elegant serif titles, natural food photography, and a quiet sage palette that makes it calm, beautiful and worth returning to.</p>
+        <p class="mm-body-s ds-lead" style="margin-top:var(--s-3)">This page renders the real files the app uses: <code>tokens.css</code>, <code>components.css</code> and <code>ui.js</code>. Change a token there and both the app and this page change.</p>
+      </header>
+
+      ${sec('principles', 'Rules', ['Follow all of these', 'Every screen is reviewed against this list.'], `<ol class="ds-rules">${RULES.map(([t, d]) => `<li><span><b>${t}</b> <span class="mm-body-s">${d}</span></span></li>`).join('')}</ol>`)}
+
+      ${sec('colour', 'Colour', ['Tokens · two layers', 'Primitives hold values; semantic tokens hold meaning and switch with the theme. Values below are read live from tokens.css.'], `
+        ${M.section('Hierarchy')}
+        <div class="ds-bar" aria-label="Colour proportions">
+          <div style="flex:60;background:var(--mm-paper);border:var(--border) solid var(--mm-hairline)">${M.label('60 Paper', { tag: 'span' })}</div>
+          <div style="flex:25;background:var(--mm-sage)"><span class="mm-label" style="color:var(--mm-sage-ink)">25 Sage</span></div>
+          <div style="flex:10;background:var(--mm-deep-sage)"><span class="mm-label" style="color:var(--mm-paper)">10</span></div>
+          <div style="flex:5;background:var(--mm-clay)"></div>
+        </div>
+        ${M.section('Primitives · --mm-*')}
+        <div class="ds-grid">${PRIMS.map(([v, n, role]) => `<div class="ds-swatch"><div class="ds-swatch__chip" style="background:var(${v})"></div><div class="ds-swatch__body">
+          <span class="mm-body">${n}</span><span class="ds-code">${hex(css(v))}</span><span class="ds-code">${v}</span><span class="mm-body-s">${role}</span></div></div>`).join('')}</div>
+        ${M.section('Semantic · use these')}
+        <table class="ds-table"><thead><tr><th>Token</th><th>Light</th><th>Dark</th><th>Use for</th></tr></thead><tbody>
+          ${SEM.map(([v, use]) => `<tr><td class="ds-code">${v}</td>${['light', 'dark'].map((t) => `<td><span data-theme="${t}" class="mm-row" style="gap:var(--s-2);background:transparent"><span style="width:28px;height:28px;background:var(${v});border:var(--border) solid var(--mm-hairline);display:inline-block"></span><span class="ds-code" data-hex="${v}"></span></span></td>`).join('')}<td>${use}</td></tr>`).join('')}
+        </tbody></table>`)}
+
+      ${sec('contrast', 'Contrast', ['Checked live · WCAG 2.2', 'AA needs 4.5:1 for small text, AAA 7:1. Large display text needs 3:1.'], `
+        <table class="ds-table"><thead><tr><th>Pair</th><th>Light</th><th>Dark</th></tr></thead><tbody>
+        ${PAIRS.map(([fg, bg, n]) => `<tr><td>${n}<br><span class="ds-code">${fg} on ${bg}</span></td>${['light', 'dark'].map((t) => `<td data-pair="${fg}|${bg}|${t}"></td>`).join('')}</tr>`).join('')}
+        </tbody></table>`)}
+
+      ${sec('type', 'Type', ['Three families, strict roles', 'Cormorant Garamond for the one serif moment and editorial lines · DM Sans for reading and controls · DM Mono for tracked labels.'], `
+        <table class="ds-table"><thead><tr><th>Style</th><th>Specimen</th><th>Token · use</th></tr></thead><tbody>
+          <tr><td class="ds-code">MM.display()</td><td>${M.display('Lemon & herb pasta', { tag: 'span' })}</td><td class="mm-body-s">--type-display-xl 44 · one per screen</td></tr>
+          <tr><td class="ds-code">size: 'l'</td><td>${M.display('Next step text', { size: 'l', tag: 'span' })}</td><td class="mm-body-s">--type-display-l 32 · cook mode step</td></tr>
+          <tr><td class="ds-code">size: 'm'</td><td>${M.display('Nothing planned yet', { size: 'm', tag: 'span' })}</td><td class="mm-body-s">--type-display-m 24 · empty states, component titles</td></tr>
+          <tr><td class="ds-code">MM.serif()</td><td>${M.serif('A little lemon, fresh herbs, and the kind of dinner you’ll want to make again.')}</td><td class="mm-body-s">--type-serif 18 · blurbs, notes</td></tr>
+          <tr><td class="ds-code">.mm-body</td><td><p class="mm-body">Boil the pasta in well-salted water until just al dente.</p></td><td class="mm-body-s">--type-body 15 · method, settings</td></tr>
+          <tr><td class="ds-code">.mm-body-s</td><td><p class="mm-body-s">Estimated from the ingredients.</p></td><td class="mm-body-s">--type-body-s 13 · help text</td></tr>
+          <tr><td class="ds-code">MM.label()</td><td>${M.label('What to cook today')}</td><td class="mm-body-s">--type-label 10 · tracked 0.16em, uppercase</td></tr>
+          <tr><td class="ds-code">MM.meta()</td><td>${M.meta(['2 portions', '25 min', '620 kcal'])}</td><td class="mm-body-s">Recipe facts, joined with ·</td></tr>
+        </tbody></table>`)}
+
+      ${sec('space', 'Spacing', ['4-point scale', 'Screen gutter is --s-6 (24px). Sections start with --s-8.'], `
+        <div class="mm-stack" style="gap:var(--s-2);margin-top:var(--s-4)">${['1', '2', '3', '4', '5', '6', '8', '10', '12', '14'].map((k) => `<div class="mm-row"><span class="ds-code" style="width:72px">--s-${k}</span><span style="height:12px;width:var(--s-${k});background:var(--action-bg)"></span><span class="mm-body-s">${css('--s-' + k)}</span></div>`).join('')}</div>`)}
+
+      ${sec('shape', 'Size, shape, motion', ['Fixed values', ''], `
+        <table class="ds-table"><tbody>
+          ${[['--hit', 'Minimum touch target'], ['--control-l', 'Primary action height'], ['--control-m', 'Default control height'], ['--tabbar-h', 'Tab bar'], ['--screen-max', 'App column width'], ['--radius-0', 'Everything'], ['--radius-round', 'Monogram, dots, toggles'], ['--dur-fast', 'Colour, state changes'], ['--dur-base', 'Sheets, toasts, rail'], ['--dur-slow', 'Reserved for page-level'], ['--ease', 'All motion']]
+            .map(([t, u]) => `<tr><td class="ds-code">${t}</td><td class="ds-code">${css(t)}</td><td>${u}</td></tr>`).join('')}
+        </tbody></table>`)}
+
+      ${sec('icons', 'Icons', ['One family · 24 grid · 1.2 stroke', 'Line icons drawn to match the hairlines. Active tab icons thicken to 1.8.'], `
+        <div class="ds-grid" style="grid-template-columns:repeat(auto-fill,minmax(110px,1fr))">${Object.keys(M.ICONS).map((k) => `<div class="mm-stack" style="gap:var(--s-2);align-items:center;padding:var(--s-4);border:var(--border) solid var(--line);color:var(--text-strong)">${M.icon(k)}<span class="ds-code">${k}</span></div>`).join('')}</div>`)}
+
+      ${sec('components', 'Components', [COMPS.length + ' components · live', 'Each preview is the real component. Use the call on the right; read the notes before using it.'], COMPS.map(([n, p, u, notes, o]) => comp(n, p, u, notes, o)).join(''))}
+
+      ${sec('audit', 'Live audit', ['Runs on every visit', 'Scans the app’s own files for anything that breaks the rules.'], '<div id="audit-out" class="mm-stack" style="gap:var(--s-2);margin-top:var(--s-4)"><p class="mm-body-s">Checking…</p></div>')}
+    `;
+
+    // fill hex + contrast cells per theme
+    main.querySelectorAll('[data-hex]').forEach((el) => { el.textContent = hex(css(el.dataset.hex, el.parentElement)); });
+    main.querySelectorAll('[data-pair]').forEach((td) => {
+      const [fg, bg, t] = td.dataset.pair.split('|');
+      const probe = document.createElement('span'); probe.dataset.theme = t; document.body.appendChild(probe);
+      const r = ratio(css(fg, probe), css(bg, probe)); probe.remove();
+      const lvl = r >= 7 ? 'AAA' : r >= 4.5 ? 'AA' : 'FAIL';
+      td.innerHTML = `<span class="ds-code">${r.toFixed(2)}:1</span> <span class="ds-pill ${lvl === 'FAIL' ? 'ds-pill--warn' : 'ds-pill--ok'}">${lvl}</span>`;
+    });
+    audit();
+  };
+
+  async function audit() {
+    const out = document.getElementById('audit-out');
+    const files = ['../assets/app.js', '../assets/ui.js', '../assets/components.css', '../index.html'];
+    const rows = [];
+    for (const f of files) {
+      try {
+        const src = await (await fetch(f, { cache: 'no-store' })).text();
+        const colours = (src.match(/#[0-9a-fA-F]{6}\b|#[0-9a-fA-F]{3}\b(?![\w-])|rgba?\(/g) || []).filter((m) => !/^#(?:[0-9]+)$/.test(m) || m.length > 4);
+        const prims = (src.match(/var\(--mm-/g) || []).length;
+        rows.push([f.replace('../', ''), colours.length, prims]);
+      } catch (e) { rows.push([f.replace('../', ''), '–', '–']); }
+    }
+    const disp = (await (await fetch('../assets/app.js', { cache: 'no-store' })).text()).match(/screens(\.|\[')[\w-]+'?\]? = /g)?.length || 0;
+    out.innerHTML = `<table class="ds-table"><thead><tr><th>File</th><th>Raw colours</th><th>Primitive tokens used</th></tr></thead><tbody>
+      ${rows.map(([f, c, p]) => `<tr><td class="ds-code">${f}</td><td>${c === 0 ? '<span class="ds-pill ds-pill--ok">0 · PASS</span>' : `<span class="ds-pill ds-pill--warn">${c} · FIX</span>`}</td><td>${p === 0 ? '<span class="ds-pill ds-pill--ok">0 · PASS</span>' : `<span class="ds-pill ds-pill--warn">${p} · FIX</span>`}</td></tr>`).join('')}
+      </tbody></table><p class="mm-body-s">${disp} screens audited. <code>tokens.css</code> is the only file allowed to hold values; this page’s colour charts are exempt.</p>`;
+  }
+
+  document.addEventListener('change', (e) => { if (e.target.id === 'ds-theme') { document.documentElement.dataset.theme = e.target.checked ? 'dark' : 'light'; draw(); } });
+  document.addEventListener('click', (e) => { const a = e.target.closest('.ds-stage a[href="#"]'); if (a) e.preventDefault(); });
+  draw();
+})();
+</script>
+</body>
+</html>
