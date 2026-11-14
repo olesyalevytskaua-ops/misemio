@@ -1,5 +1,7 @@
 # Misemio
 
+**[Read the product design case study →](docs/CASE-STUDY.md)** · [Live prototype](https://olesyalevytskaua-ops.github.io/misemio/) · [Design system](ds/)
+
 **A personal recipe library that feels like a cookbook you made yourself.**
 Warm paper, serif titles, a quiet sage palette, and nothing that nags you.
 
