@@ -4,7 +4,7 @@
 
 > **Every recipe worth keeping.** Misemio turns recipes collected across websites, screenshots, and personal notes into a calm, searchable recipe library. The concept is designed around saving first, organizing later, and enjoying cooking without the friction of finding that one recipe again.
 
-[Explore the prototype](https://olesyalevytskaua-ops.github.io/misemio/) · [Browse the design system](../ds/) · [See the source](https://github.com/olesyalevytskaua-ops/misemio)
+[View prototype preview (in development)](https://olesyalevytskaua-ops.github.io/misemio/) · [Browse the design system](../ds/) · [See the source](https://github.com/olesyalevytskaua-ops/misemio)
 
 ![Misemio editorial light and dark splash design](screens/splash-dark.png)
 
@@ -70,7 +70,7 @@ The logo is intentionally simple: *misemio.* with an italic editorial wordmark a
 |---|---|
 | ![Dark weekly menu](screens/menu-dark.jpg) | ![Grocery list](screens/grocery.jpg) |
 
-The current repository contains a **working static HTML/CSS/JavaScript prototype**, including a library, search, recipe details and portion scaling, step-by-step cook mode, collections, import-review concept, weekly menu, grocery list, light/dark themes, and local JSON export. See [README](../README.md) for the current feature-by-feature implementation notes.
+The repository contains **static HTML/CSS/JavaScript UI implementation in progress**, with designed screens and code for the library, search, recipe details, portion scaling, cook mode, collections, import review, weekly menu, grocery list, light/dark themes and JSON export. **The prototype is not yet working reliably**, and these features must not be considered fully functional or validated until tested. See [README](../README.md) for the current feature-by-feature implementation notes.
 
 ## 06 / Design system and accessibility
 
@@ -90,7 +90,7 @@ The interface uses documented primitive and semantic tokens, reusable `MM.*` com
 
 The design hypotheses still need testing with actual users and real imported recipes. Priorities include extraction accuracy from screenshots and links, correction effort, recipe findability, whether editorial collections outperform image-heavy boards, portion scaling correctness, and kitchen usability of the cook-mode controls.
 
-**Status:** Functional front-end prototype with simulated parsing; not presented as a production-ready recipe ingestion service.
+**Status:** Design concept and in-development front-end prototype. The prototype does not yet work reliably, and recipe parsing is simulated. Screens document the intended UI, not proof of a usable production app.
 
 ---
 
