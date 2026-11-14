@@ -179,8 +179,6 @@
         ${M.progress(((k + 1) / r.steps.length) * 100, { label: 'Progress' })}
         ${M.label(r.name)}
         <div aria-live="polite">${M.display(r.steps[k], { tag: 'p' })}</div>
-        ${M.section('You need')}
-        <div>${r.ingredients.map((x) => M.check(x[0], { qty: qty(x[1], x[2], (S.servings[id] || r.servings) / r.servings) })).join('')}</div>
       </div>
       ${M.actionbar(M.button('Back', { variant: 'secondary', size: 'l', action: 'step', data: '-1', disabled: k === 0 }) + M.button(last ? 'Done' : 'Next step', { size: 'l', action: last ? 'cook-done' : 'step', data: last ? id : '1', trailing: last ? 'check' : 'arrow', block: true }))}` };
   };

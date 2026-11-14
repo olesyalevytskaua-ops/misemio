@@ -26,7 +26,7 @@ Misemio comes from *mise en place* ("everything in its place"). The app saves re
 | **Library** | One "what to cook today" pick, ranked by what's planned, then saved this week, then favourites, then quick dishes, with the reason shown on the card. Swipe or use the side rail to see the next pick, or shuffle. |
 | **Search** | Search by name, ingredient or note. Sort six ways (newest, A–Z, quickest, calories, protein, fewest ingredients) and filter by time, favourites, calories, protein or ingredient count. |
 | **Recipe** | Scale portions and every amount updates. Nutrition per portion, your own notes, favourite, add to a menu on a chosen day. |
-| **Cook mode** | One step at a time in large type, an ingredient checklist and step progress. Built to read from across the kitchen. |
+| **Cook mode** | One step at a time in large type with step progress, and nothing else on screen. Built to read from across the kitchen. |
 | **Collections** | Your own shelves, laid out like a cookbook contents page. Drag the number (or use ↑ ↓ on the keyboard) to reorder. |
 | **Import** | From a link, a screenshot or a blank page, always through a "check before saving" review. *(In this prototype the parsing is simulated.)* |
 | **Menu → Grocery** | Plan meals by day for a number of people, then get one grocery list grouped by aisle or by recipe. Pantry staples are listed separately. |
