@@ -6,6 +6,10 @@ Warm paper, serif titles, a quiet sage palette, and nothing that nags you.
 Misemio comes from *mise en place* ("everything in its place"). The app saves recipes from links, screenshots or your own hands. It helps you pick what to cook today, plan a week of meals and turn that plan into a grocery list.
 
 <p>
+  <img src="docs/screens/splash-light.png" width="200" alt="Splash screen, light: paper still life with the misemio wordmark">
+  <img src="docs/screens/splash-dark.png" width="200" alt="Splash screen, dark: deep green still life with chartreuse monogram">
+</p>
+<p>
   <img src="docs/screens/library.jpg" width="200" alt="Library: today's pick with a vertical swipe rail">
   <img src="docs/screens/recipe.jpg" width="200" alt="Recipe page with portions stepper">
   <img src="docs/screens/cook-mode.jpg" width="200" alt="Cook mode: one large step at a time">
@@ -23,6 +27,7 @@ Misemio comes from *mise en place* ("everything in its place"). The app saves re
 
 | Screen | What you can do |
 |---|---|
+| **Splash** | The welcome screen when the app opens: a food still life (paper in light, deep green in dark), the monogram, the *misemio.* wordmark and "Save. Organize. Cook. Repeat." It animates in: the background settles, the monogram pops, the letters rise one by one, then the line, rule and button. Shown once per browser session; Start cooking or Esc closes it, and Me → Replay welcome screen brings it back. |
 | **Library** | One "what to cook today" pick, ranked by what's planned, then saved this week, then favourites, then quick dishes, with the reason shown on the card. Scroll, swipe, use ↑ ↓ or the side rail to move to the next pick. |
 | **Search** | Search by name, ingredient or note. Sort six ways (newest, A–Z, quickest, calories, protein, fewest ingredients) and filter by time, favourites, calories, protein or ingredient count. |
 | **Recipe** | Scale portions and every amount updates. Nutrition per portion, your own notes, favourite, add to a menu on a chosen day. |
@@ -59,7 +64,8 @@ misemio/
 │   ├── components.css      component classes (.mm-*), semantic tokens only
 │   ├── ui.js               component functions (MM.button, MM.indexRow, MM.sheet, …)
 │   ├── app.js              screens, state, actions, undo, drag-to-reorder
-│   └── data.js             sample library (8 recipes, 5 collections)
+│   ├── data.js             sample library (8 recipes, 5 collections)
+│   └── img/                splash backgrounds (light + dark)
 ├── ds/
 │   └── index.html          design system page: renders the real components and audits the app
 └── docs/
@@ -115,7 +121,7 @@ Square corners everywhere (round only for the monogram, dots and toggles) · 4-p
 
 ### Components (`MM.*`)
 
-`button` · `iconButton` · `chip` / `chips` · `tag` · `segmented` · `stepper` · `toggle` · `check` · `timer` · `searchField` · `textField` · `photo` (letter + sprig placeholder) · `monogram` · `topbar` · `section` · `listRow` / `list` · `indexRow` · `stats` · `dataRow` · `progress` · `empty` · `tabbar` · `rail` · `sheet` / `option` · `toast` (undo) · `actionbar`
+`button` · `iconButton` · `chip` / `chips` · `tag` · `segmented` · `stepper` · `toggle` · `check` · `timer` · `searchField` · `textField` · `photo` (letter + sprig placeholder) · `monogram` · `topbar` · `section` · `listRow` / `list` · `indexRow` · `stats` · `dataRow` · `progress` · `empty` · `tabbar` · `rail` · `sheet` / `option` · `toast` (undo) · `actionbar` · `splash`
 
 ### The rules every screen is checked against
 
@@ -148,6 +154,9 @@ The work was done in small, checked steps. Each change goes through the design s
 | **Fix: Cook mode** | Used a hand-built 32px display. Moved to `MM.display()` at 44px inside an `aria-live` region, so each new step is announced. |
 | **Fix: dark surfaces** | Body text on `--surface` was 6.89:1 (AA only). Moved dark `--surface` to Deep Sage 3, giving **9.68:1 (AAA)**. |
 | **Decision: Collections layout** | Compared three options (list with covers, index without photos, peek). Chose **Option 2, an index without photos**: it's the fastest to scan and the most editorial. Added `MM.indexRow` to the design system first, then rebuilt the screen. The number doubles as the drag handle. |
+
+| **Feedback round (artifact comments)** | Cook mode shows only the current step, plus a new `MM.timer` for any step that names a time. On Library you scroll to the next pick, and shuffle is gone. |
+| **Splash screen** | Light and dark backgrounds became tokens (`--splash-bg`), with the logotype size (`--type-wordmark`) and a hero motion duration (`--dur-hero`). Added `MM.splash` to `/ds` with a replayable preview, then showed it when the app opens. Every timing is a motion token, so reduced motion shows it instantly. |
 
 Every step ends with the `/ds` live audit showing **PASS** for every file.
 

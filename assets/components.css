@@ -255,5 +255,39 @@ a { color: inherit; }
 /* ---- Dot (new) ------------------------------------------------------ */
 .mm-dot { width: 9px; height: 9px; border-radius: var(--radius-round); background: var(--text-strong); border: 2px solid var(--bg); display: inline-block; }
 
+/* ---- Splash (welcome screen) ---------------------------------------- */
+.mm-splash { position: fixed; inset: 0; z-index: 60; background: var(--bg); display: flex; justify-content: center; overflow: hidden; }
+.mm-splash--inline { position: relative; inset: auto; z-index: auto; height: 720px; width: 100%; }
+.mm-splash__bg, .mm-splash__inner { width: 100%; max-width: var(--screen-max); }
+.mm-splash__bg { position: absolute; top: 0; bottom: 0; background: var(--splash-bg) center / cover no-repeat;
+                 animation: mm-splash-bg var(--dur-hero) var(--ease) both; }
+.mm-splash__inner { position: relative; display: flex; flex-direction: column; align-items: center;
+                    padding: var(--s-14) var(--gutter) calc(var(--s-10) + env(safe-area-inset-bottom)); text-align: center; }
+.mm-splash__brand { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-5); padding-bottom: var(--s-10); }
+.mm-splash__mono { width: 64px; height: 64px; font-size: 34px;
+                   animation: mm-pop var(--dur-slow) var(--ease) both; animation-delay: var(--dur-base); }
+.mm-splash__word { margin: 0; font-family: var(--font-display); font-style: italic; font-weight: 500; font-size: var(--type-wordmark);
+                   line-height: 1; letter-spacing: var(--track-display); color: var(--text-strong); }
+.mm-splash__word span span { display: inline-block; animation: mm-rise var(--dur-slow) var(--ease) both;
+                   animation-delay: calc(var(--dur-base) * 2 + var(--dur-fast) * var(--i) * .4); }
+.mm-splash__tag { margin: 0; font-family: var(--font-label); font-size: var(--type-button); letter-spacing: .3em; text-transform: uppercase;
+                  line-height: 1.9; color: var(--text-strong); animation: mm-rise var(--dur-slow) var(--ease) both; animation-delay: calc(var(--dur-base) * 4); }
+.mm-splash__tag span { display: block; }
+.mm-splash__rule { width: 36px; height: 2px; background: var(--selected-bg); transform-origin: center;
+                   animation: mm-draw var(--dur-slow) var(--ease) both; animation-delay: calc(var(--dur-base) * 4.8); }
+.mm-splash__line { margin: 0; max-width: 19ch; font-family: var(--font-display); font-style: italic; font-size: var(--type-display-m);
+                   line-height: 1.25; color: var(--text-strong); animation: mm-rise var(--dur-slow) var(--ease) both; animation-delay: calc(var(--dur-base) * 5.4); }
+.mm-splash__cta { width: 100%; animation: mm-rise var(--dur-slow) var(--ease) both; animation-delay: calc(var(--dur-base) * 6.2); }
+.mm-splash.is-leaving { animation: mm-fade var(--dur-slow) var(--ease) reverse both; }
+.mm-splash.is-leaving .mm-splash__bg { animation: mm-splash-out var(--dur-slow) var(--ease) both; }
+.mm-splash.is-leaving .mm-splash__inner { animation: mm-lift var(--dur-slow) var(--ease) both; }
+
+@keyframes mm-splash-bg  { from { opacity: 0; transform: scale(1.08); } to { opacity: 1; transform: scale(1); } }
+@keyframes mm-splash-out { to { transform: scale(1.04); } }
+@keyframes mm-lift { to { transform: translateY(-24px); opacity: 0; } }
+@keyframes mm-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes mm-pop  { 0% { opacity: 0; transform: scale(.4); } 70% { opacity: 1; transform: scale(1.06); } 100% { transform: scale(1); } }
+@keyframes mm-draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
 @keyframes mm-up { from { transform: translate(-50%, 16px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 @keyframes mm-fade { from { opacity: 0; } to { opacity: 1; } }

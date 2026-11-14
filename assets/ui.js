@@ -120,6 +120,24 @@
   };
   const monogram = ({ href } = {}) => href ? `<a class="mm-monogram" href="${esc(href)}" aria-label="Misemio home">m.</a>` : `<span class="mm-monogram" aria-hidden="true">m.</span>`;
 
+  // Splash: the welcome screen on app open. Logo, wordmark, promise, one way in.
+  // inline: true renders it in place (for /ds) instead of as a full-screen dialog.
+  const splash = ({ inline } = {}) => {
+    const word = 'misemio.'.split('').map((ch, i) => `<span style="--i:${i}">${esc(ch)}</span>`).join('');
+    return `<div class="mm-splash${inline ? ' mm-splash--inline' : ''}" ${inline ? '' : 'role="dialog" aria-modal="true" aria-labelledby="mm-splash-title"'}>
+      <div class="mm-splash__bg" aria-hidden="true"></div>
+      <div class="mm-splash__inner">
+        <div class="mm-splash__brand">
+          <span class="mm-monogram mm-splash__mono" aria-hidden="true">m.</span>
+          <h1 class="mm-splash__word" ${inline ? '' : 'id="mm-splash-title"'} aria-label="Misemio"><span aria-hidden="true">${word}</span></h1>
+          <p class="mm-splash__tag"><span>Your personal</span> <span>recipe library</span></p>
+          <span class="mm-splash__rule" aria-hidden="true"></span>
+          <p class="mm-splash__line">Save. Organize. Cook. Repeat.</p>
+        </div>
+        <div class="mm-splash__cta">${button('Start cooking', { variant: 'accent', size: 'l', trailing: 'arrow', action: 'splash-close', block: true })}</div>
+      </div></div>`;
+  };
+
   /* ---- Structure ---------------------------------------------------------- */
   const topbar = ({ left = '', title = '', right = '' } = {}) =>
     `<header class="mm-topbar">${left || '<span style="width:var(--hit)"></span>'}<div class="mm-topbar__title">${title}</div>${right || '<span style="width:var(--hit)"></span>'}</header>`;
@@ -189,5 +207,5 @@
 
   window.MM = { esc, icon, ICONS, label, display, meta, serif, button, iconButton, chip, chips, tag, segmented, toggle, stepper, timer, clock, check,
     searchField, textField, photo, monogram, topbar, section, listRow, indexRow, list, dataRow, stats, progress, empty, tabbar, rail,
-    sheet, option, toast, actionbar, TABS, VERSION: '1.0' };
+    sheet, option, toast, actionbar, splash, TABS, VERSION: '1.0' };
 })();

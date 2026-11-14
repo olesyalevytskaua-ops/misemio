@@ -335,6 +335,7 @@
       ${M.button('Copy my recipes as JSON', { variant: 'secondary', action: 'export', block: true })}
       ${M.section('For designers')}
       ${M.list([M.listRow({ href: 'ds/index.html', title: 'Design system', metaText: 'Tokens, components and rules · v' + M.VERSION, media: M.icon('collections') })])}
+      ${M.button('Replay welcome screen', { variant: 'ghost', action: 'splash-show' })}
       ${M.button('Reset sample library', { variant: 'ghost', action: 'reset' })}
     </div>` });
 
@@ -470,7 +471,7 @@
     if (Math.abs(wheelAcc) > 40) { S.pick += wheelAcc > 0 ? 1 : -1; wheelAcc = 0; wheelLock = true; setTimeout(() => { wheelLock = false; }, 650); render(); }
   }, { passive: false });
   document.addEventListener('keydown', (e) => {
-    if (route().name !== 'library' || e.target.closest?.('input, textarea, [role=button], button, a')) return;
+    if (route().name !== 'library' || document.querySelector('.mm-splash') || e.target.closest?.('input, textarea, [role=button], button, a')) return;
     if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); S.pick += 1; render(); }
     if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); S.pick -= 1; render(); }
   });
@@ -506,4 +507,25 @@
 
   window.addEventListener('hashchange', () => { S.sheet = null; if (!location.hash.startsWith('#cook')) S.step = 0; render(); window.scrollTo(0, 0); });
   render();
+
+  /* ---- Splash: once per browser session, outside #app so re-renders don't restart it */
+  function showSplash() {
+    if (document.querySelector('.mm-splash')) return;
+    document.body.insertAdjacentHTML('beforeend', M.splash());
+    document.documentElement.style.overflow = 'hidden';
+    document.querySelector('.mm-splash [data-action="splash-close"]')?.focus({ preventScroll: true });
+  }
+  function closeSplash() {
+    const el = document.querySelector('.mm-splash:not(.mm-splash--inline)'); if (!el || el.classList.contains('is-leaving')) return;
+    try { sessionStorage.setItem('misemio.splash', '1'); } catch (e) { /* private mode: show again next time */ }
+    el.classList.add('is-leaving');
+    const done = () => { el.remove(); document.documentElement.style.overflow = ''; document.querySelector('#app a, #app button')?.focus({ preventScroll: true }); };
+    el.addEventListener('animationend', (e) => { if (e.target === el) done(); });
+    setTimeout(() => { if (el.isConnected) done(); }, 600);
+  }
+  A['splash-close'] = closeSplash;
+  A['splash-show'] = showSplash;
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.querySelector('.mm-splash')) closeSplash(); });
+  let seen = false; try { seen = sessionStorage.getItem('misemio.splash') === '1'; } catch (e) { /* ignore */ }
+  if (!seen) showSplash();
 })();

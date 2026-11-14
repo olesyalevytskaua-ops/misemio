@@ -30,6 +30,7 @@
   --font-body:    'DM Sans', system-ui, sans-serif;
   --font-label:   'DM Mono', ui-monospace, monospace;
 
+  --type-wordmark:   84px;   /* splash only — the logotype, not a heading */
   --type-display-xl: 44px;   /* ONE per screen — the serif moment */
   --type-display-l:  32px;
   --type-display-m:  24px;
@@ -71,6 +72,7 @@
   --dur-fast: 120ms;
   --dur-base: 240ms;
   --dur-slow: 420ms;
+  --dur-hero: 1400ms;            /* splash background settle */
   --ease: cubic-bezier(.2,.7,.2,1);
 }
 
@@ -95,6 +97,7 @@
   --tone-1: var(--mm-sage-pale); --tone-2: var(--mm-sage-mist);
   --tone-3: var(--mm-linen);     --tone-4: var(--mm-sage-wash);
   --scrim: rgba(31,27,24,.32);
+  --splash-bg: url('img/splash-light.webp');
   color-scheme: light;
 }
 
@@ -119,9 +122,10 @@
   --tone-1: var(--mm-deep-sage-2); --tone-2: var(--mm-deep-sage-3);
   --tone-3: var(--mm-deep-sage-2); --tone-4: var(--mm-deep-sage-3);
   --scrim: rgba(0,0,0,.45);
+  --splash-bg: url('img/splash-dark.webp');
   color-scheme: dark;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :root { --dur-fast: 0ms; --dur-base: 0ms; --dur-slow: 0ms; }
+  :root { --dur-fast: 0ms; --dur-base: 0ms; --dur-slow: 0ms; --dur-hero: 0ms; }
 }

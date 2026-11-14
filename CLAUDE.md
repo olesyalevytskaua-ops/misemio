@@ -5,7 +5,7 @@ Run: `python3 -m http.server 8000` → http://localhost:8000 (app) and http://lo
 ## Structure
 - `assets/tokens.css` — the ONLY file with raw colour/size values (primitives `--mm-*` → semantic tokens, light + dark themes)
 - `assets/components.css` — component classes (`.mm-*`), semantic tokens only
-- `assets/ui.js` — component functions `MM.*` (button, iconButton, chip, tag, segmented, stepper, toggle, timer, check, searchField, textField, photo, monogram, topbar, section, listRow, indexRow, stats, dataRow, progress, empty, tabbar, rail, sheet, option, toast, actionbar)
+- `assets/ui.js` — component functions `MM.*` (button, iconButton, chip, tag, segmented, stepper, toggle, timer, check, searchField, textField, photo, monogram, topbar, section, listRow, indexRow, stats, dataRow, progress, empty, tabbar, rail, sheet, option, toast, actionbar, splash)
 - `assets/app.js` — screens (hash routes: library, search, recipe-<id>, cook-<id>, collections, collection-<id>, import, import-review, menu, grocery, me)
 - `ds/index.html` — design system page; renders the real components and runs a live audit
 

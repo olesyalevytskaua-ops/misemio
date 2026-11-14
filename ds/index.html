@@ -149,8 +149,15 @@
     ['Sheet', M.sheet({ title: 'Sort by', body: `<div role="menu">${M.option('Newest first', true)}${M.option('Name A–Z', false)}${M.option('Fewest calories', false)}</div>` }),
       "MM.sheet({ title, body })\nMM.option('Newest first', checked, { action })", ['Sort, filters, add to menu, new collection. Escape and scrim close it.'], { phone: true }],
     ['Toast with undo', M.toast('Removed White bean stew'), "MM.toast('Removed White bean stew')", ['Every destructive or surprising action: act first, offer Undo for 5 s. No “Are you sure?” dialogs.'], { phone: true }],
-    ['Action bar', M.actionbar(M.button('+ Menu', { variant: 'secondary', size: 'l' }) + M.button('Start cooking', { size: 'l', trailing: 'arrow', block: true })), "MM.actionbar(html)", ['Task screens instead of the tab bar. Max two buttons, primary on the right.'], { phone: true }]
+    ['Action bar', M.actionbar(M.button('+ Menu', { variant: 'secondary', size: 'l' }) + M.button('Start cooking', { size: 'l', trailing: 'arrow', block: true })), "MM.actionbar(html)", ['Task screens instead of the tab bar. Max two buttons, primary on the right.'], { phone: true }],
+    ['Splash', `<div id="ds-splash" style="width:100%">${M.splash({ inline: true })}</div><div style="padding:var(--s-3)">${M.button('Replay animation', { variant: 'ghost', action: 'ds-splash-replay' })}</div>`,
+      "MM.splash()                 // full-screen dialog on app open\nMM.splash({ inline: true })  // in place, for previews",
+      ['Shown once per browser session when the app opens; Start cooking (or Esc) closes it. Me → Replay welcome screen shows it again.', 'Backgrounds are tokens: <code>--splash-bg</code> is the paper still life in light, the deep-green one in dark. Food photography brings the warm colour.', 'The wordmark (<code>--type-wordmark</code>, 84px) is the logotype, not a heading style, so it doesn’t count as the serif moment. The tagline is a serif line.', 'Entrance: background settles (1.4 s), monogram pops, letters rise one by one, then label, rule, tagline and button. Exit: lifts and fades. All timings are motion tokens, so reduced motion shows it instantly.', 'Chartreuse button is the screen’s one accent. Square corners, like every other button.'], { phone: true }]
   ];
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('[data-action="ds-splash-replay"]')) return;
+    const box = document.getElementById('ds-splash'); box.innerHTML = ''; requestAnimationFrame(() => { box.innerHTML = M.splash({ inline: true }); });
+  });
 
   const RULES = [
     ['Tokens only.', 'Raw colours live in <code>tokens.css</code> and nowhere else. Components and screens use semantic tokens (<code>--text</code>, <code>--action-bg</code>), never primitives (<code>--mm-*</code>).'],
