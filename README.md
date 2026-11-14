@@ -1,6 +1,6 @@
 # Misemio
 
-**[Read the product design case study →](docs/CASE-STUDY.md)** · [Live prototype](https://olesyalevytskaua-ops.github.io/misemio/) · [Design system](ds/)
+**[Read the product design case study →](docs/CASE-STUDY.md)** · [Prototype preview (in development)](https://olesyalevytskaua-ops.github.io/misemio/) · [Design system](ds/)
 
 **A personal recipe library that feels like a cookbook you made yourself.**
 Warm paper, serif titles, a quiet sage palette, and nothing that nags you.
@@ -192,4 +192,4 @@ After any change, open `/ds` and check that the **Live audit** shows PASS everyw
 
 ## Status
 
-This is a working **prototype**. Data lives in your browser's `localStorage` (export it any time from **Me**). The library starts with eight sample recipes, and parsing from links and screenshots is simulated.
+This is an **in-development UI prototype, not yet confirmed functional end-to-end**. The code uses browser `localStorage` for local sample data and includes an export flow, but behavior still needs testing and fixes before it should be presented as a working app. The library starts with eight sample recipes, and parsing from links and screenshots is simulated.
