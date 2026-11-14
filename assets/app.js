@@ -81,18 +81,17 @@
           ${M.button('View all', { variant: 'ghost', href: '#search' })}
         </div>
       </section>
-      <div style="display:grid;grid-template-columns:var(--hit) 1fr;gap:var(--s-3);padding:var(--s-8) var(--gutter) 0 var(--s-3)">
+      <div data-swipe style="display:grid;grid-template-columns:var(--hit) 1fr;gap:var(--s-3);padding:var(--s-8) var(--gutter) 0 var(--s-3);touch-action:none">
         <div style="padding-top:var(--s-10)">${M.rail({ idx: i, total: n, prevName: prev.r.name, nextName: next.r.name })}</div>
         <main class="mm-stack" style="gap:var(--s-3);min-width:0">
           ${M.label("What to cook today")}
           ${M.display(cur.r.name)}
           ${M.meta(metaOf(cur.r))}
           ${M.serif(cur.r.blurb, { clamp: true })}
-          <div data-swipe style="margin-top:var(--s-3);touch-action:none;cursor:grab">
-            ${M.photo({ letter: cur.r.name, tone: tone(cur.r), h: 260, caption: cur.reason, captionRight: 'Swipe ↑', alt: cur.r.name })}
+          <div style="margin-top:var(--s-3)">
+            ${M.photo({ letter: cur.r.name, tone: tone(cur.r), h: 260, caption: cur.reason, captionRight: 'Scroll ↓', alt: cur.r.name })}
           </div>
-          <div class="mm-row" style="gap:var(--s-2);margin-top:var(--s-2)">
-            ${M.iconButton('shuffle', 'Shuffle picks', { action: 'shuffle' })}
+          <div style="margin-top:var(--s-2)">
             ${M.button('Start cooking', { size: 'l', href: '#recipe-' + cur.r.id, trailing: 'arrow', block: true })}
           </div>
         </main>
@@ -456,11 +455,25 @@
     if (h && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) { e.preventDefault(); moveCol(h.dataset.drag, e.key === 'ArrowUp' ? -1 : 1); render(); document.querySelector(`[data-drag="${h.dataset.drag}"]`)?.focus(); }
   });
 
-  /* ---- swipe on Today's pick ---------------------------------------------- */
+  /* ---- Today's pick: scroll, swipe or arrow keys move to the next pick ---- */
   let sy = null;
   document.addEventListener('pointerdown', (e) => { if (e.target.closest('[data-swipe]')) sy = e.clientY; });
   document.addEventListener('pointerup', (e) => { if (sy === null) return; const d = e.clientY - sy; sy = null;
     if (d < -40) { S.pick += 1; render(); } else if (d > 40) { S.pick -= 1; render(); } });
+  // Wheel / trackpad: one pick per gesture (momentum is swallowed while locked)
+  let wheelAcc = 0, wheelLock = false;
+  document.addEventListener('wheel', (e) => {
+    if (!e.target.closest('[data-swipe]')) return;
+    e.preventDefault();
+    if (wheelLock) { wheelAcc = 0; return; }
+    wheelAcc += e.deltaY;
+    if (Math.abs(wheelAcc) > 40) { S.pick += wheelAcc > 0 ? 1 : -1; wheelAcc = 0; wheelLock = true; setTimeout(() => { wheelLock = false; }, 650); render(); }
+  }, { passive: false });
+  document.addEventListener('keydown', (e) => {
+    if (route().name !== 'library' || e.target.closest?.('input, textarea, [role=button], button, a')) return;
+    if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); S.pick += 1; render(); }
+    if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); S.pick -= 1; render(); }
+  });
 
   /* ---- timer tick: update digits in place; on finish, toast + re-render ------- */
   setInterval(() => {

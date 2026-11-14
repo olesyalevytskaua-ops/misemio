@@ -145,7 +145,7 @@
       "MM.topbar({ left, title, right })", ['Left: monogram on tab screens, back elsewhere. Title is a label, never a display heading.']],
     ['Tab bar', M.tabbar('library', { fixed: false }), "MM.tabbar('library')", ['Five tabs, always in this order. Active = solid tile behind icon and label.', 'Hidden on recipe, cook mode and other task screens.'], { phone: true }],
     ['Side rail', `<div style="height:380px">${M.rail({ idx: 1, total: 5, prevName: 'Lemon & herb pasta', nextName: 'Tomato tarte fine' })}</div>`,
-      "MM.rail({ idx, total, prevName, nextName })", ['Library only. Shows neighbours of the vertical swipe; buttons give a non-gesture way through.']],
+      "MM.rail({ idx, total, prevName, nextName })", ['Library only. Shows the picks before and after the current one; scroll, swipe or ↑ ↓ moves one pick at a time. Its buttons give a way through without gestures.']],
     ['Sheet', M.sheet({ title: 'Sort by', body: `<div role="menu">${M.option('Newest first', true)}${M.option('Name A–Z', false)}${M.option('Fewest calories', false)}</div>` }),
       "MM.sheet({ title, body })\nMM.option('Newest first', checked, { action })", ['Sort, filters, add to menu, new collection. Escape and scrim close it.'], { phone: true }],
     ['Toast with undo', M.toast('Removed White bean stew'), "MM.toast('Removed White bean stew')", ['Every destructive or surprising action: act first, offer Undo for 5 s. No “Are you sure?” dialogs.'], { phone: true }],
