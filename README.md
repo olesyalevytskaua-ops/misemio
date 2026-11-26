@@ -29,7 +29,7 @@ Misemio comes from *mise en place* ("everything in its place"). The app saves re
 
 | Screen | What you can do |
 |---|---|
-| **Cookbook cover** | Tap the sage cloth cover to browse your recipe collections. Expanding from a compact to a wide viewport opens it too. |
+| **Cookbook cover** | The light and dark covers use Misemio’s food photography. Set the name on your cover in Me. Tap the cover or expand from a compact to a wide viewport to open your collections. |
 | **Splash** | The welcome screen when the app opens: a food still life (paper in light, deep green in dark), the monogram, the *misemio.* wordmark and "Save. Organize. Cook. Repeat." It animates in: the background settles, the monogram pops, the letters rise one by one, then the line, rule and button. Start cooking or Esc closes it, and Me → Replay welcome screen brings it back. |
 | **Library** | One "what to cook today" pick, ranked by what's planned, then saved this week, then favourites, then quick dishes, with the reason shown on the card. Scroll, swipe, use ↑ ↓ or the side rail to move to the next pick. |
 | **Search** | Search by name, ingredient or note. Sort six ways (newest, A–Z, quickest, calories, protein, fewest ingredients) and filter by time, favourites, calories, protein or ingredient count. |

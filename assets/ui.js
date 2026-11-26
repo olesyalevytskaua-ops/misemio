@@ -101,9 +101,9 @@
   const searchField = (value, { placeholder = 'Name, ingredient or note', label: lbl = 'Search recipes by name, ingredient or note', id = 'q', boxed } = {}) =>
     `<label class="mm-field${boxed ? ' mm-field--box' : ''}">${icon('search')}<span class="mm-sr">${esc(lbl)}</span>
        <input type="search" ${attrs({ id, value, placeholder, autocomplete: 'off' })}></label>`;
-  const textField = (value, { placeholder, label: lbl, id, icon: ic } = {}) =>
+  const textField = (value, { placeholder, label: lbl, id, icon: ic, maxlength } = {}) =>
     `<label class="mm-field mm-field--box">${ic ? icon(ic) : ''}<span class="mm-sr">${esc(lbl)}</span>
-       <input type="text" ${attrs({ id, value, placeholder })}></label>`;
+       <input type="text" ${attrs({ id, value, placeholder, maxlength })}></label>`;
 
   /* ---- Media -------------------------------------------------------------- */
   const SPRIG = '<path d="M50 136 C50 100 48 60 52 8"/><path d="M50 112 C30 107 22 92 24 82 C38 84 48 96 50 112Z"/><path d="M50 97 C70 92 78 77 76 67 C62 69 52 81 50 97Z"/><path d="M50 80 C32 75 26 62 28 52 C40 55 49 65 50 80Z"/><path d="M51 64 C68 59 73 47 71 38 C60 41 52 50 51 64Z"/><path d="M51 47 C38 42 34 32 36 24 C45 27 51 35 51 47Z"/><path d="M52 32 C60 26 62 17 58 8 C52 12 50 22 52 32Z"/>';
@@ -138,15 +138,13 @@
       </div></div>`;
   };
 
-  const cookbookCover = () => `<main class="mm-cover">
-    <a class="mm-cover__book" href="#collections" aria-label="Open the Misemio cookbook">
-      <span class="mm-cover__spine" aria-hidden="true"></span>
+  const cookbookCover = ({ owner, href = '#collections' } = {}) => `<main class="mm-cover">
+    <a class="mm-cover__book" href="${esc(href)}" aria-labelledby="cookbook-open cookbook-owner">
       <div class="mm-cover__title">
-        <svg class="mm-cover__sprig" viewBox="0 0 100 140" aria-hidden="true">${SPRIG}</svg>
         <h1 class="mm-cover__word">misemio.</h1>
-        <p class="mm-cover__label">My recipe book</p>
+        <p class="mm-cover__label" id="cookbook-owner">${owner ? `${esc(owner)}’s recipe book` : 'My recipe book'}</p>
       </div>
-      <span class="mm-cover__open">Open cookbook ${icon('arrow')}</span>
+      <span class="mm-cover__open" id="cookbook-open">Open cookbook ${icon('arrow')}</span>
     </a>
   </main>`;
 

@@ -72,6 +72,28 @@ The logo is intentionally simple: *misemio.* with an italic editorial wordmark a
 
 The repository contains **static HTML/CSS/JavaScript UI implementation in progress**, with designed screens and code for the library, search, recipe details, portion scaling, cook mode, collections, import review, weekly menu, grocery list, light/dark themes and JSON export. **The prototype is not yet working reliably**, and these features must not be considered fully functional or validated until tested. See [README](../README.md) for the current feature-by-feature implementation notes.
 
+### Foldable cookbook prototype
+
+A photographic cover borrows the fruit, herbs and warm light of the welcome screen. The owner’s name sits below the Misemio wordmark and is saved in the browser. Opening the cover becomes the interaction that takes you into the book.
+
+| View | What the reader sees |
+|---|---|
+| Compact, cover closed | The cover and an explicit **Open cookbook** action |
+| Expanded from the cover | A contents page on the left and recipes in the active collection on the right |
+| Compact, after selecting a collection | The same collection’s recipes in a single column |
+
+The interaction uses the available browser viewport. CSS lays out the contents and recipe pages side by side at 600 × 480 CSS pixels or larger. JavaScript listens for the same media query to open the book when the viewport first crosses that threshold while the cover is visible.
+
+```js
+window.matchMedia('(min-width: 600px) and (min-height: 480px)').addEventListener('change', (event) => {
+  if (event.matches && route().name === 'cover' && !document.querySelector('.mm-splash')) go('#collections');
+});
+```
+
+The collection lives in the URL hash, so changing viewport sizes preserves the selection. A tap or keyboard activation on the cover opens the cookbook at any size. See the [JavaScript](../assets/app.js) and [responsive CSS](../assets/components.css).
+
+**Validation.** Open the cover at a compact viewport, then expand to 850 × 640 CSS pixels. Select a collection and reduce the viewport to verify the recipe list stays on that collection. This interaction was checked in Chromium with simulated viewport changes. Safari behaviour on physical iPhone Duo hardware remains to be verified.
+
 ## 06 / Design system and accessibility
 
 The interface uses documented primitive and semantic tokens, reusable `MM.*` components, and a living [design system](../ds/) that renders actual components and checks contrast and token usage. The design rules include keyboard-accessible reordering, at least 44px interaction targets, visible focus, reduced motion, and contrast-conscious text combinations. Accessibility checks and assertions in the repository are not substitutes for independent device and assistive-technology testing.

@@ -25,6 +25,7 @@
     activeMenu: store.get('activeMenu', 'week'),
     grocery: store.get('grocery', {}),
     theme: store.get('theme', 'light'),
+    cookbookOwner: store.get('cookbookOwner', ''),
     pick: 0, q: '', sort: 'added', filters: {}, sheet: null, servings: {}, step: 0, timers: {},
     groceryView: 'aisle', toast: null, undo: null, draft: null, addDay: 'Any day', addMenu: null
   };
@@ -64,7 +65,7 @@
 
   /* ================================ SCREENS ================================= */
   const screens = {};
-  screens.cover = () => ({ tab: null, html: M.cookbookCover() });
+  screens.cover = () => ({ tab: null, html: M.cookbookCover({ owner: S.cookbookOwner }) });
 
   screens.library = () => {
     const P = picks();
@@ -342,6 +343,15 @@
       ${M.label('Misemio · my own cookbook')}
       ${M.display('Your kitchen')}
       ${M.stats([[S.recipes.length, 'Recipes'], [S.collections.length, 'Shelves'], [S.menus.length, 'Menus']])}
+      ${M.section('Cookbook cover')}
+      <form id="cookbook-owner-form" class="mm-stack" style="gap:var(--s-2)">
+        ${M.textField(S.cookbookOwner, { id: 'cover-name', label: 'Name on the cover', placeholder: 'Name on the cover', maxlength: 40 })}
+        <div class="mm-row">
+          ${M.button('Save name', { variant: 'secondary', type: 'submit' })}
+          ${M.button('View cover', { variant: 'ghost', href: '#cover' })}
+        </div>
+        <output class="mm-body-s" aria-live="polite"></output>
+      </form>
       ${M.section('Preferences')}
       <label class="mm-listrow mm-listrow--plain" for="dark"><span class="mm-listrow__body"><span class="mm-body">Dark kitchen</span>${M.label('Deep sage, for evenings', { tag: 'span' })}</span>${M.toggle('dark', S.theme === 'dark', { action: 'theme' })}</label>
       ${M.section('Your recipes are yours')}
@@ -454,6 +464,16 @@
     const fn = A[el.dataset.action]; if (!fn) return;
     e.preventDefault();
     Promise.resolve(fn(el.dataset.arg)).then(render);
+  });
+  document.addEventListener('submit', (event) => {
+    const form = event.target;
+    if (form.id !== 'cookbook-owner-form') return;
+    event.preventDefault();
+    const field = form.querySelector('#cover-name');
+    S.cookbookOwner = field.value.trim();
+    store.set('cookbookOwner', S.cookbookOwner);
+    field.value = S.cookbookOwner;
+    form.querySelector('output').textContent = S.cookbookOwner ? 'Name saved.' : 'Personal name cleared.';
   });
   document.addEventListener('change', (e) => {
     const el = e.target;
