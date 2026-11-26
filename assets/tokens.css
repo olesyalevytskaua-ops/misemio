@@ -129,3 +129,14 @@
 @media (prefers-reduced-motion: reduce) {
   :root { --dur-fast: 0ms; --dur-base: 0ms; --dur-slow: 0ms; --dur-hero: 0ms; }
 }
+
+/* ---- Cookbook ----------------------------------------------------------- */
+:root {
+  --cover-cloth: var(--mm-deep-sage-3);
+  --cover-ink: var(--mm-paper);
+  --cover-foil: var(--mm-clay);
+  --cover-weave: color-mix(in srgb, var(--cover-ink) 6%, transparent);
+  --cover-binding: color-mix(in srgb, var(--cover-ink) 25%, transparent);
+  --cover-shadow: color-mix(in srgb, var(--mm-ink) 22%, transparent);
+  --cookbook-max: 960px;
+}

@@ -138,6 +138,26 @@
       </div></div>`;
   };
 
+  const cookbookCover = () => `<main class="mm-cover">
+    <a class="mm-cover__book" href="#collections" aria-label="Open the Misemio cookbook">
+      <span class="mm-cover__spine" aria-hidden="true"></span>
+      <div class="mm-cover__title">
+        <svg class="mm-cover__sprig" viewBox="0 0 100 140" aria-hidden="true">${SPRIG}</svg>
+        <h1 class="mm-cover__word">misemio.</h1>
+        <p class="mm-cover__label">My recipe book</p>
+      </div>
+      <span class="mm-cover__open">Open cookbook ${icon('arrow')}</span>
+    </a>
+  </main>`;
+
+  const cookbookSpread = ({ index, recipes, back, showingIndex }) =>
+    `<div class="mm-spread ${showingIndex ? 'mm-spread--index' : 'mm-spread--recipes'}">
+      <section class="mm-spread__index" aria-label="Cookbook contents">${index}</section>
+      <section class="mm-spread__recipes" aria-labelledby="cookbook-recipes-title">
+        ${back}<div class="mm-spread__recipe-list">${recipes}</div>
+      </section>
+    </div>`;
+
   /* ---- Structure ---------------------------------------------------------- */
   const topbar = ({ left = '', title = '', right = '' } = {}) =>
     `<header class="mm-topbar">${left || '<span style="width:var(--hit)"></span>'}<div class="mm-topbar__title">${title}</div>${right || '<span style="width:var(--hit)"></span>'}</header>`;
@@ -153,13 +173,13 @@
   };
   // Index row: contents-page entry. Number (doubles as drag handle) + serif title + count + arrow.
   // add: true → the closing "+ New …" row, a button.
-  const indexRow = ({ n, title, count, countLabel = 'recipes', href, drag, action, data, add } = {}) => {
+  const indexRow = ({ n, title, count, current, countLabel = 'recipes', href, drag, action, data, add } = {}) => {
     const num = String(n).padStart(2, '0');
     if (add) return `<li><button type="button" class="mm-indexrow mm-indexrow--add" ${attrs({ 'data-action': action, 'data-arg': data })}><span class="mm-indexrow__n" aria-hidden="true">+</span><span class="mm-indexrow__title">${esc(title)}</span></button></li>`;
     const handle = drag
       ? `<span class="mm-indexrow__n mm-indexrow__n--drag" data-drag="${esc(drag)}" role="button" tabindex="0" aria-label="Reorder ${esc(title)}, position ${n}. Use arrow keys">${num}</span>`
       : `<span class="mm-indexrow__n" aria-hidden="true">${num}</span>`;
-    return `<li ${attrs({ 'data-col': drag })}><div class="mm-indexrow">${handle}<a class="mm-indexrow__link" href="${esc(href)}"><span class="mm-indexrow__title">${esc(title)}</span>${count != null ? `<span class="mm-indexrow__count">${esc(count)}<span class="mm-sr"> ${esc(countLabel)}</span></span>` : ''}${icon('arrow')}</a></div></li>`;
+    return `<li ${attrs({ 'data-col': drag })}><div class="mm-indexrow">${handle}<a class="mm-indexrow__link" ${attrs({ href, 'aria-current': current ? 'page' : undefined })}><span class="mm-indexrow__title">${esc(title)}</span>${count != null ? `<span class="mm-indexrow__count">${esc(count)}<span class="mm-sr"> ${esc(countLabel)}</span></span>` : ''}${icon('arrow')}</a></div></li>`;
   };
   const list = (rows, { label: lbl } = {}) => `<ul class="mm-list" ${attrs({ 'aria-label': lbl })}>${rows.join('')}</ul>`;
   const dataRow = (k, v) => `<div class="mm-datarow"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`;
@@ -207,5 +227,5 @@
 
   window.MM = { esc, icon, ICONS, label, display, meta, serif, button, iconButton, chip, chips, tag, segmented, toggle, stepper, timer, clock, check,
     searchField, textField, photo, monogram, topbar, section, listRow, indexRow, list, dataRow, stats, progress, empty, tabbar, rail,
-    sheet, option, toast, actionbar, splash, TABS, VERSION: '1.0' };
+    sheet, option, toast, actionbar, splash, cookbookCover, cookbookSpread, TABS, VERSION: '1.0' };
 })();

@@ -64,6 +64,7 @@
 
   /* ================================ SCREENS ================================= */
   const screens = {};
+  screens.cover = () => ({ tab: null, html: M.cookbookCover() });
 
   screens.library = () => {
     const P = picks();
@@ -148,7 +149,7 @@
     const sv = S.servings[id] || r.servings; const f = sv / r.servings;
     const n = r.nutrition || {};
     return { tab: null, html: `
-      ${M.topbar({ left: M.iconButton('back', 'Back', { href: '#library' }), right: M.iconButton('heart', r.fav ? 'Remove from favourites' : 'Add to favourites', { action: 'fav', data: r.id, pressed: r.fav }) })}
+      ${M.topbar({ left: M.iconButton('back', 'Back', { href: S.recipeBack || '#library' }), right: M.iconButton('heart', r.fav ? 'Remove from favourites' : 'Add to favourites', { action: 'fav', data: r.id, pressed: r.fav }) })}
       <div style="margin-top:var(--s-3)">${M.photo({ letter: r.name, tone: tone(r), h: 320, caption: 'No photo yet · tap to add one', alt: r.name })}</div>
       <article class="mm-pad mm-stack" style="gap:var(--s-3);padding-top:var(--s-6);padding-bottom:var(--s-14)">
         ${M.label(r.source)}
@@ -203,32 +204,45 @@
       ${M.actionbar(M.button('Back', { variant: 'secondary', size: 'l', action: 'step', data: '-1', disabled: k === 0 }) + M.button(last ? 'Done' : 'Next step', { size: 'l', action: last ? 'cook-done' : 'step', data: last ? id : '1', trailing: last ? 'check' : 'arrow', block: true }))}` };
   };
 
-  /* ---- Collections (Option 2 · index, no photos; drag the number to reorder) */
+  /* ---- Cookbook contents and recipes ---------------------------------------- */
   const inCol = (cid) => S.recipes.filter((r) => r.collections?.includes(cid));
-  screens.collections = () => ({ tab: 'collections', html: `
-    ${M.topbar({ left: M.monogram({ href: '#library' }) })}
-    <div class="mm-pad mm-stack" style="gap:var(--s-4);padding-top:var(--s-4)">
-      ${M.display('Collections')}
-      ${M.chips([M.chip('All', { href: '#collection-all', count: S.recipes.length }), M.chip('Favourites', { href: '#collection-fav', count: S.recipes.filter((r) => r.fav).length }), M.chip('Unsorted', { href: '#collection-unsorted', count: S.recipes.filter((r) => !r.collections?.length).length })])}
-      ${M.section('Hold a number and drag to reorder')}
-      <ul class="mm-list" id="cols" aria-label="Collections">${S.collections.map((c, k) => {
-        const n = inCol(c.id).length;
-        return M.indexRow({ n: k + 1, title: c.name, count: n, countLabel: n === 1 ? 'recipe' : 'recipes', href: '#collection-' + c.id, drag: c.id });
-      }).join('')}${M.indexRow({ title: 'New collection', add: true, action: 'open-sheet', data: 'newcol' })}</ul>
-    </div>` });
 
-  screens.collection = (cid) => {
-    const c = cid === 'all' ? { name: 'All recipes' } : cid === 'fav' ? { name: 'Favourites' } : cid === 'unsorted' ? { name: 'Unsorted' } : S.collections.find((x) => x.id === cid);
-    if (!c) return screens.notfound();
-    const rs = cid === 'all' ? S.recipes : cid === 'fav' ? S.recipes.filter((r) => r.fav) : cid === 'unsorted' ? S.recipes.filter((r) => !r.collections?.length) : inCol(cid);
-    return { tab: 'collections', html: `
-      ${M.topbar({ left: M.iconButton('back', 'Back to collections', { href: '#collections' }) })}
-      <div class="mm-pad mm-stack" style="gap:var(--s-3);padding-top:var(--s-4)">
-        ${M.label(rs.length + ' recipes')}
-        ${M.display(c.name)}
-        ${rs.length ? M.list(rs.map((r) => M.listRow({ href: '#recipe-' + r.id, title: r.name, metaText: `${fmtTime(r.time)} · ${r.kcal} kcal`, media: thumb(r) }))) : M.empty({ title: 'Empty for now', body: 'Recipes you file here will show up on this shelf.', cta: M.button('Add a recipe', { href: '#import' }) })}
-      </div>` };
+  const cookbook = (selectedId) => {
+    const showingIndex = selectedId === undefined;
+    const cid = selectedId ?? S.collections[0]?.id ?? 'all';
+    const filters = [
+      { id: 'all', name: 'All recipes', label: 'All', recipes: S.recipes },
+      { id: 'fav', name: 'Favourites', label: 'Favourites', recipes: S.recipes.filter((r) => r.fav) },
+      { id: 'unsorted', name: 'Unsorted', label: 'Unsorted', recipes: S.recipes.filter((r) => !r.collections?.length) }
+    ];
+    const collection = filters.find((item) => item.id === cid) || S.collections.find((item) => item.id === cid);
+    if (!collection) return screens.notfound();
+
+    const recipes = collection.recipes ?? inCol(cid);
+    const index = `
+      ${M.label('Cookbook contents')}
+      ${M.display('Collections', { size: 'l' })}
+      ${M.chips(filters.map((item) => M.chip(item.label, { href: '#collection-' + item.id, count: item.recipes.length, pressed: item.id === cid })))}
+      <ul class="mm-list" id="cols" aria-label="Your collections">
+        ${S.collections.map((item, i) => {
+          const count = inCol(item.id).length;
+          return M.indexRow({ n: i + 1, title: item.name, count, countLabel: count === 1 ? 'recipe' : 'recipes', href: '#collection-' + item.id, drag: item.id, current: item.id === cid });
+        }).join('')}
+        ${M.indexRow({ title: 'New collection', add: true, action: 'open-sheet', data: 'newcol' })}
+      </ul>`;
+    const list = `
+      ${M.label(recipes.length + (recipes.length === 1 ? ' recipe' : ' recipes'))}
+      <h2 class="mm-display" id="cookbook-recipes-title" tabindex="-1">${M.esc(collection.name)}</h2>
+      ${recipes.length ? M.list(recipes.map((r) => M.listRow({ href: '#recipe-' + r.id, title: r.name, metaText: `${fmtTime(r.time)} · ${r.kcal} kcal`, media: thumb(r) })), { label: 'Recipes' }) : M.empty({ title: 'Empty for now', body: 'Recipes you file here will show up on this shelf.', cta: M.button('Add a recipe', { href: '#import' }) })}`;
+    return {
+      tab: 'collections',
+      html: M.topbar({ left: M.iconButton('back', 'Back to cover', { href: '#cover' }), title: M.label('Misemio', { tag: 'span', strong: true }) })
+        + M.cookbookSpread({ index, recipes: list, showingIndex, back: M.button('Collections', { href: '#collections', variant: 'ghost' }) })
+    };
   };
+
+  screens.collections = cookbook;
+  screens.collection = cookbook;
 
   /* ---- Import --------------------------------------------------------------- */
   screens.import = () => ({ tab: 'import', html: `
@@ -361,7 +375,7 @@
 
   /* ================================ RENDER ================================== */
   const route = () => {
-    const h = (location.hash || '#library').slice(1);
+    const h = (location.hash || '#cover').slice(1);
     if (h === 'ds') { location.href = 'ds/index.html'; return { name: 'library' }; }
     const m = h.match(/^(recipe|cook|collection)-(.+)$/);
     if (m) return { name: m[1], arg: m[2] };
@@ -373,7 +387,7 @@
     document.documentElement.dataset.theme = S.theme;
     const rt = route();
     const out = screens[rt.name](rt.arg);
-    $app.innerHTML = `<div class="mm-screen">${out.html}</div>${out.tab ? M.tabbar(out.tab) : ''}${S.sheet && sheets[S.sheet] ? sheets[S.sheet]() : ''}${S.toast ? M.toast(S.toast, { undo: !!S.undo }) : ''}`;
+    $app.innerHTML = `<div class="mm-screen" data-screen="${rt.name}">${out.html}</div>${out.tab ? M.tabbar(out.tab) : ''}${S.sheet && sheets[S.sheet] ? sheets[S.sheet]() : ''}${S.toast ? M.toast(S.toast, { undo: !!S.undo }) : ''}`;
     bindDrag();
   };
   const toast = (msg, undo) => {
@@ -505,8 +519,24 @@
     }));
   }
 
-  window.addEventListener('hashchange', () => { S.sheet = null; if (!location.hash.startsWith('#cook')) S.step = 0; render(); window.scrollTo(0, 0); });
+  window.addEventListener('hashchange', (event) => {
+    S.sheet = null;
+    const next = route();
+    if (next.name !== 'cook') S.step = 0;
+    const previous = new URL(event.oldURL).hash;
+    if (next.name === 'recipe' && !previous.startsWith('#cook-')) {
+      S.recipeBack = previous === '#collections' || previous.startsWith('#collection-') ? previous : '#library';
+    }
+    render();
+    window.scrollTo(0, 0);
+    if (next.name === 'collection') document.getElementById('cookbook-recipes-title')?.focus({ preventScroll: true });
+  });
   render();
+
+  // A foldable exposes its larger display to the web app as a viewport resize.
+  window.matchMedia('(min-width: 600px) and (min-height: 480px)').addEventListener('change', (event) => {
+    if (event.matches && route().name === 'cover' && !document.querySelector('.mm-splash')) go('#collections');
+  });
 
   /* ---- Splash: once per browser session, outside #app so re-renders don't restart it */
   function showSplash() {
@@ -527,5 +557,5 @@
   A['splash-show'] = showSplash;
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.querySelector('.mm-splash')) closeSplash(); });
   let seen = false; try { seen = sessionStorage.getItem('misemio.splash') === '1'; } catch (e) { /* ignore */ }
-  if (!seen) showSplash();
+  if (!seen && route().name !== 'cover' && !location.hash.startsWith('#collection')) showSplash();
 })();
