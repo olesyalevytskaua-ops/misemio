@@ -74,7 +74,7 @@ The repository contains **static HTML/CSS/JavaScript UI implementation in progre
 
 ### Foldable cookbook prototype
 
-A photographic cover borrows the fruit, herbs and warm light of the welcome screen. The owner’s name sits below the Misemio wordmark and is saved in the browser. Opening the cover becomes the interaction that takes you into the book.
+The edge-to-edge cover reworks the welcome screen’s fruit, herbs and warm light for the proportions of the iPhone Duo displays. The owner’s name sits below the Misemio wordmark and is saved in the browser. Opening the cover becomes the interaction that takes you into the book.
 
 | View | What the reader sees |
 |---|---|
