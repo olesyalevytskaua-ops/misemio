@@ -29,12 +29,13 @@ Misemio comes from *mise en place* ("everything in its place"). The app saves re
 
 | Screen | What you can do |
 |---|---|
-| **Splash** | The welcome screen when the app opens: a food still life (paper in light, deep green in dark), the monogram, the *misemio.* wordmark and "Save. Organize. Cook. Repeat." It animates in: the background settles, the monogram pops, the letters rise one by one, then the line, rule and button. Shown once per browser session; Start cooking or Esc closes it, and Me → Replay welcome screen brings it back. |
+| **Cookbook cover** | The light and dark covers use Misemio’s food photography. Set the name on your cover in Me. Tap the cover or expand from a compact to a wide viewport to open your collections. |
+| **Splash** | The welcome screen when the app opens: a food still life (paper in light, deep green in dark), the monogram, the *misemio.* wordmark and "Save. Organize. Cook. Repeat." It animates in: the background settles, the monogram pops, the letters rise one by one, then the line, rule and button. Start cooking or Esc closes it, and Me → Replay welcome screen brings it back. |
 | **Library** | One "what to cook today" pick, ranked by what's planned, then saved this week, then favourites, then quick dishes, with the reason shown on the card. Scroll, swipe, use ↑ ↓ or the side rail to move to the next pick. |
 | **Search** | Search by name, ingredient or note. Sort six ways (newest, A–Z, quickest, calories, protein, fewest ingredients) and filter by time, favourites, calories, protein or ingredient count. |
 | **Recipe** | Scale portions and every amount updates. Nutrition per portion, your own notes, favourite, add to a menu on a chosen day. |
 | **Cook mode** | One step at a time in large type with step progress. When a step names a time ("cover 6 minutes", "for two minutes"), a timer appears under it; a running timer follows you to other steps. Built to read from across the kitchen. |
-| **Collections** | Your own shelves, laid out like a cookbook contents page. Drag the number (or use ↑ ↓ on the keyboard) to reorder. |
+| **Collections** | Your own shelves. In windows at least 600 × 480 CSS pixels, collections sit on the left and recipes from the current collection sit on the right. Narrow windows show one page at a time. Drag the number (or use ↑ ↓ on the keyboard) to reorder. |
 | **Import** | From a link, a screenshot or a blank page, always through a "check before saving" review. *(In this prototype the parsing is simulated.)* |
 | **Menu → Grocery** | Plan meals by day for a number of people, then get one grocery list grouped by aisle or by recipe. Pantry staples are listed separately. |
 | **Me** | Dark mode ("Dark kitchen"), and a one-tap JSON export of everything. Your recipes are yours. |

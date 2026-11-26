@@ -101,9 +101,9 @@
   const searchField = (value, { placeholder = 'Name, ingredient or note', label: lbl = 'Search recipes by name, ingredient or note', id = 'q', boxed } = {}) =>
     `<label class="mm-field${boxed ? ' mm-field--box' : ''}">${icon('search')}<span class="mm-sr">${esc(lbl)}</span>
        <input type="search" ${attrs({ id, value, placeholder, autocomplete: 'off' })}></label>`;
-  const textField = (value, { placeholder, label: lbl, id, icon: ic } = {}) =>
+  const textField = (value, { placeholder, label: lbl, id, icon: ic, maxlength } = {}) =>
     `<label class="mm-field mm-field--box">${ic ? icon(ic) : ''}<span class="mm-sr">${esc(lbl)}</span>
-       <input type="text" ${attrs({ id, value, placeholder })}></label>`;
+       <input type="text" ${attrs({ id, value, placeholder, maxlength })}></label>`;
 
   /* ---- Media -------------------------------------------------------------- */
   const SPRIG = '<path d="M50 136 C50 100 48 60 52 8"/><path d="M50 112 C30 107 22 92 24 82 C38 84 48 96 50 112Z"/><path d="M50 97 C70 92 78 77 76 67 C62 69 52 81 50 97Z"/><path d="M50 80 C32 75 26 62 28 52 C40 55 49 65 50 80Z"/><path d="M51 64 C68 59 73 47 71 38 C60 41 52 50 51 64Z"/><path d="M51 47 C38 42 34 32 36 24 C45 27 51 35 51 47Z"/><path d="M52 32 C60 26 62 17 58 8 C52 12 50 22 52 32Z"/>';
@@ -138,6 +138,24 @@
       </div></div>`;
   };
 
+  const cookbookCover = ({ owner, href = '#collections' } = {}) => `<main class="mm-cover">
+    <a class="mm-cover__book" href="${esc(href)}" aria-labelledby="cookbook-open cookbook-owner">
+      <div class="mm-cover__title">
+        <h1 class="mm-cover__word">misemio.</h1>
+        <p class="mm-cover__label" id="cookbook-owner">${owner ? `${esc(owner)}’s recipe book` : 'My recipe book'}</p>
+      </div>
+      <span class="mm-cover__open" id="cookbook-open">Open cookbook ${icon('arrow')}</span>
+    </a>
+  </main>`;
+
+  const cookbookSpread = ({ index, recipes, back, showingIndex }) =>
+    `<div class="mm-spread ${showingIndex ? 'mm-spread--index' : 'mm-spread--recipes'}">
+      <section class="mm-spread__index" aria-label="Cookbook contents">${index}</section>
+      <section class="mm-spread__recipes" aria-labelledby="cookbook-recipes-title">
+        ${back}<div class="mm-spread__recipe-list">${recipes}</div>
+      </section>
+    </div>`;
+
   /* ---- Structure ---------------------------------------------------------- */
   const topbar = ({ left = '', title = '', right = '' } = {}) =>
     `<header class="mm-topbar">${left || '<span style="width:var(--hit)"></span>'}<div class="mm-topbar__title">${title}</div>${right || '<span style="width:var(--hit)"></span>'}</header>`;
@@ -153,13 +171,13 @@
   };
   // Index row: contents-page entry. Number (doubles as drag handle) + serif title + count + arrow.
   // add: true → the closing "+ New …" row, a button.
-  const indexRow = ({ n, title, count, countLabel = 'recipes', href, drag, action, data, add } = {}) => {
+  const indexRow = ({ n, title, count, current, countLabel = 'recipes', href, drag, action, data, add } = {}) => {
     const num = String(n).padStart(2, '0');
     if (add) return `<li><button type="button" class="mm-indexrow mm-indexrow--add" ${attrs({ 'data-action': action, 'data-arg': data })}><span class="mm-indexrow__n" aria-hidden="true">+</span><span class="mm-indexrow__title">${esc(title)}</span></button></li>`;
     const handle = drag
       ? `<span class="mm-indexrow__n mm-indexrow__n--drag" data-drag="${esc(drag)}" role="button" tabindex="0" aria-label="Reorder ${esc(title)}, position ${n}. Use arrow keys">${num}</span>`
       : `<span class="mm-indexrow__n" aria-hidden="true">${num}</span>`;
-    return `<li ${attrs({ 'data-col': drag })}><div class="mm-indexrow">${handle}<a class="mm-indexrow__link" href="${esc(href)}"><span class="mm-indexrow__title">${esc(title)}</span>${count != null ? `<span class="mm-indexrow__count">${esc(count)}<span class="mm-sr"> ${esc(countLabel)}</span></span>` : ''}${icon('arrow')}</a></div></li>`;
+    return `<li ${attrs({ 'data-col': drag })}><div class="mm-indexrow">${handle}<a class="mm-indexrow__link" ${attrs({ href, 'aria-current': current ? 'page' : undefined })}><span class="mm-indexrow__title">${esc(title)}</span>${count != null ? `<span class="mm-indexrow__count">${esc(count)}<span class="mm-sr"> ${esc(countLabel)}</span></span>` : ''}${icon('arrow')}</a></div></li>`;
   };
   const list = (rows, { label: lbl } = {}) => `<ul class="mm-list" ${attrs({ 'aria-label': lbl })}>${rows.join('')}</ul>`;
   const dataRow = (k, v) => `<div class="mm-datarow"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`;
@@ -207,5 +225,5 @@
 
   window.MM = { esc, icon, ICONS, label, display, meta, serif, button, iconButton, chip, chips, tag, segmented, toggle, stepper, timer, clock, check,
     searchField, textField, photo, monogram, topbar, section, listRow, indexRow, list, dataRow, stats, progress, empty, tabbar, rail,
-    sheet, option, toast, actionbar, splash, TABS, VERSION: '1.0' };
+    sheet, option, toast, actionbar, splash, cookbookCover, cookbookSpread, TABS, VERSION: '1.0' };
 })();
